@@ -6,6 +6,8 @@
     <title>@ViewData["Title"] - En Ucuz PSN Bakiye</title>
     <meta name="description" content="PS Plus Türkiye ve Azerbaycan için en ucuz PSN bakiye, GTA 5 ve oyun fiyatları.">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
     <link rel="stylesheet" href="~/css/still.css" />
     <link rel="icon" type="image/jpg" href="~/images/icon2.jpg">
 
@@ -31,6 +33,7 @@
             padding: 8px 15px;
             border-radius: 5px;
             font-size: 14px;
+            display: inline-block;
         }
 
         .admin-login {
@@ -43,20 +46,26 @@
             color: white;
         }
 
-        /* Mobilde buton üst üste binmesin diye */
+        .admin-slider {
+            background-color: #ffc107;
+            color: #000;
+            margin-right: 5px;
+        }
+
         @@media (max-width: 600px) {
-            .admin-btn-container
+            .admin-btn-container {
+                top: 10px;
+                right: 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                align-items: flex-end;
+            }
 
-        {
-            top: 10px;
-            right: 10px;
-        }
-
-        .admin-link {
-            padding: 5px 10px;
-            font-size: 12px;
-        }
-
+            .admin-link {
+                padding: 5px 10px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -66,7 +75,11 @@
         <div class="admin-btn-container">
             @if (User.Identity.IsAuthenticated)
             {
-                <a href="/Account/Logout" class="admin-link admin-logout">Çıkış Yap (@User.Identity.Name)</a>
+                <a href="/Admin/Index" class="admin-link admin-slider me-2" style="background-color: purple; color: white;">
+                    ⚙️ Yönetim Paneli
+                </a>
+
+                <a href="/Account/Logout" class="admin-link admin-logout">Çıkış Yap</a>
             }
             else
             {
@@ -76,7 +89,7 @@
 
         <div class="header-container">
             <a href="/">
-                <img src="~/images/Gemini_Generated_Image_roucdbroucdbrouc.png" alt="PS Plus Banner">
+                <img src="~/images/Gemini_Generated_Image_roucdbroucdbrouc.png" alt="PS Plus Banner" style="max-width:100%; height:auto;">
             </a>
         </div>
     </header>
@@ -87,37 +100,39 @@
         </main>
     </div>
 
-    <footer>
-        <div class="footer-content">
+    <footer class="mt-5 bg-dark text-white p-4">
+        <div class="footer-content text-center">
             <h3>İLETİŞİM</h3>
             <p>WhatsApp: <a href="https://wa.me/+994513677405" style="color:white;">+994 51 367 74 05</a></p>
             <br>
             @if (ViewData["Title"]?.ToString() == "Ana Sayfa")
             {
-                <a asp-controller="Home" asp-action="Hakkimizda" class="footer-link">ℹ️ Hakkımızda</a>
+                <a asp-controller="Home" asp-action="Hakkimizda" class="text-white">ℹ️ Hakkımızda</a>
             }
             else
             {
-                <a asp-controller="Home" asp-action="Index" class="footer-link">🏠 Ana Sayfa</a>
+                <a asp-controller="Home" asp-action="Index" class="text-white">🏠 Ana Sayfa</a>
             }
         </div>
     </footer>
 
-    <button onclick="sepetiAc()" class="sepet-buton">
-        🛒 Sepetim (<span id="sepet-sayisi">0</span>)
+    <button onclick="sepetiAc()" class="sepet-buton" style="position:fixed; bottom:20px; right:20px; z-index:9999; background:orange; border:none; padding:15px; border-radius:50%; font-size:20px; cursor:pointer;">
+        🛒 <span id="sepet-sayisi" style="font-weight:bold;">0</span>
     </button>
 
-    <div id="sepet-modal" class="sepet-modal">
+    <div id="sepet-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:20px; border:2px solid black; z-index:10000; width:300px;">
         <div class="sepet-icerik">
-            <span onclick="sepetiKapat()" class="kapat-tus">&times;</span>
+            <span onclick="sepetiKapat()" style="float:right; cursor:pointer; font-size:20px;">&times;</span>
             <h2>Sepetiniz</h2>
-            <ul id="sepet-listesi">
+            <ul id="sepet-listesi" style="list-style:none; padding:0;">
                 <li>Sepetiniz boş.</li>
             </ul>
             <h3 id="toplam-fiyat">Toplam: 0 AZN</h3>
-            <button onclick="whatsappSiparisVer()" class="siparis-btn">WhatsApp İle Siparişi Tamamla</button>
+            <button onclick="whatsappSiparisVer()" class="btn btn-success w-100 mt-2">WhatsApp İle Siparişi Tamamla</button>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         let sepet = [];
@@ -140,7 +155,7 @@
 
             sepet.forEach((urun, index) => {
                 let satir = document.createElement("li");
-                satir.innerHTML = `${urun.isim} - <b>${urun.fiyat} AZN</b> <button onclick="urunuSil(${index})" style="background:red;color:white;border:none;border-radius:3px;cursor:pointer;margin-left:10px;">Sil</button>`;
+                satir.innerHTML = `${urun.isim} - <b>${urun.fiyat} AZN</b> <button onclick="urunuSil(${index})" class="btn btn-danger btn-sm ms-2">Sil</button>`;
                 liste.appendChild(satir);
                 toplam += urun.fiyat;
             });
@@ -167,19 +182,14 @@
                 alert("Sepetiniz boş, lütfen önce ürün ekleyin.");
                 return;
             }
-
             let mesaj = "Merhaba, web sitenizden şu ürünleri sipariş etmek istiyorum:%0A";
             let toplam = 0;
-
             sepet.forEach(urun => {
                 mesaj += `- ${urun.isim} (${urun.fiyat} AZN)%0A`;
                 toplam += urun.fiyat;
             });
-
             mesaj += `%0AToplam Tutar: ${toplam} AZN`;
-
             let telefon = "+994513677405";
-
             window.open(`https://wa.me/${telefon}?text=${mesaj}`, "_blank");
         }
     </script>

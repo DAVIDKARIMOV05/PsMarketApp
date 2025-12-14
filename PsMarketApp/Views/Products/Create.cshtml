@@ -1,48 +1,76 @@
 ﻿@model PsMarketApp.Models.Product
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Yeni Ürün Ekle";
 }
 
-<h1>Create</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header text-white" style="background-color: #0f2290; border-bottom: 3px solid #4f96d0;">
+                    <h4 class="mb-0">Yeni Ürün Ekle</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                        <div class="form-group mb-3">
+                            <label asp-for="Name" class="control-label fw-bold">Ürün Adı</label>
+                            <input asp-for="Name" class="form-control" placeholder="Örn: FIFA 25" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="ImageUrl" class="control-label fw-bold">Resim Linki</label>
+                            <input asp-for="ImageUrl" class="form-control" placeholder="https://..." />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Price" class="control-label fw-bold">Fiyat (AZN)</label>
+                                <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OldPrice" class="control-label fw-bold">Eski Fiyat (Opsiyonel)</label>
+                                <input asp-for="OldPrice" class="form-control" type="number" step="0.01" />
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4 p-3 bg-light border rounded">
+                            <label class="control-label fw-bold text-primary mb-2">Slider (Kayan Liste) Ayarları</label>
+
+                            <select asp-for="SliderId" class="form-control mb-2" asp-items="ViewBag.SliderId">
+                                <option value="">-- Var Olan Listeden Seç --</option>
+                            </select>
+
+                            <div class="text-center text-muted small my-1">- VEYA -</div>
+
+                            <input type="text" name="YeniSliderIsmi" class="form-control border-warning" placeholder="➕ Yeni Bir Liste Oluştur" />
+                            <small class="text-muted">Buraya yazarsan otomatik olarak yeni liste oluşur.</small>
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" asp-for="Vitrin" type="checkbox" id="vitrinCheck">
+                            <label class="form-check-label" for="vitrinCheck">
+                                Ana Sayfada Öne Çıkar (Vitrinde Göster)
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <input type="submit" value="Ürünü Kaydet" class="btn btn-success btn-lg" />
+                            <a asp-action="Index" class="btn btn-secondary">İptal</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OldPrice" class="control-label"></label>
-                <input asp-for="OldPrice" class="form-control" />
-                <span asp-validation-for="OldPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

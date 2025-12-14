@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Admin Paneli";
+}
+
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="admin-baslik">🚀 YÖNETİM MERKEZİ</h1>
+        <p class="admin-alt-baslik">Hoş geldin Şef! Mağazanı buradan yönetebilirsin.</p>
+    </div>
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-4 mb-4">
+            <a href="/Products/Create" class="admin-card card-yesil">
+                <div class="text-center">
+                    <span class="admin-icon">✨</span>
+                    <h3>Ürün Ekle</h3>
+                    <p>Markete yeni oyunlar veya bakiyeler ekle.</p>
+                    <div class="btn-admin-action">Ekleme Formuna Git</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a href="/Products/Index" class="admin-card card-mavi">
+                <div class="text-center">
+                    <span class="admin-icon">📋</span>
+                    <h3>Ürünleri Yönet</h3>
+                    <p>Fiyatları güncelle, ürün sil veya düzenle.</p>
+                    <div class="btn-admin-action">Listeyi Düzenle</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a href="/Sliders/Index" class="admin-card card-sari">
+                <div class="text-center">
+                    <span class="admin-icon">🎡</span>
+                    <h3>Slider Ayarları</h3>
+                    <p>Ana sayfadaki kayan vitrin kutularını düzenle.</p>
+                    <div class="btn-admin-action">Vitrini Yönet</div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="/" class="btn btn-outline-light btn-lg px-5" style="border-radius: 50px;">
+            🏠 Ana Sayfaya Dön
+        </a>
+    </div>
+</div>

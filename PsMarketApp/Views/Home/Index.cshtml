@@ -1,46 +1,159 @@
-﻿@model IEnumerable<PsMarketApp.Models.Product>
+﻿@model PsMarketApp.Models.HomeViewModel
 
 @{
     ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="whatsapp-container">
-    <a href="https://wa.me/+994513677405" target="_blank" class="whatsapp-btn">
-        WhatsApp'tan Sifariş Ver
-    </a>
+<div class="container my-5">
+    <form asp-controller="Home" asp-action="Index" method="get">
+        <div class="input-group input-group-lg search-bar-container">
+            <input type="text" name="SearchTerm" class="form-control search-input" placeholder="Aradığın ürünü buraya yaz..." aria-label="Search" value="@ViewData["SearchTerm"]">
+
+            <button class="btn search-btn" type="submit">
+                🔎 Ürün Ara
+            </button>
+        </div>
+
+        @if (ViewData["SearchActive"] != null && (bool)ViewData["SearchActive"])
+        {
+            <div class="text-center mt-3">
+                <p class="text-warning">
+                    "@ViewData["SearchTerm"]" için sonuçlar listeleniyor.
+                    <a href="@Url.Action("Index", "Home")" class="text-info fw-bold">Aramayı Temizle</a>
+                </p>
+            </div>
+        }
+    </form>
 </div>
 
-<h2 class="bolum-basligi">VİTRİN ÜRÜNLERİ (KAYDIRIN 👉)</h2>
+<div class="filter-fixed-container">
 
-<div class="kaydirmali-container">
+    <button class="btn filter-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#filtreMenu" aria-expanded="false" aria-controls="filtreMenu">
+        🔍 Filtreler
+    </button>
 
-    @foreach (var urun in Model)
+    <div class="collapse collapse-horizontal" id="filtreMenu">
+
+        <div class="filter-menu-content">
+            <h5 class="text-white mb-2" style="font-weight: bold; padding: 5px 0; border-bottom: 1px solid #4f96d0;">KATEGORİLER VE FİLTRELER</h5>
+
+            <a href="@Url.Action("Index", "Home", new { Filter = "All" })"
+               class="filter-item @(ViewData["Filter"]?.ToString() == "All" ? "active-filter" : "")">
+                ✨ Tüm Ürünler
+            </a>
+
+            
+
+            <hr style="border-top: 1px dashed #4f96d0; margin: 10px 0;" />
+
+            @if (Model.Sliders != null)
+            {
+                @foreach (var slider in Model.Sliders)
+                {
+                    <a href="@Url.Action("Index", "Home", new { Filter = $"Slider_{slider.Id}" })"
+                       class="filter-item @(ViewData["Filter"]?.ToString() == $"Slider_{slider.Id}" ? "active-filter" : "")">
+                        @slider.Baslik
+                    </a>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container main-content-offset">
+
+    @if (string.IsNullOrEmpty(ViewData["SearchTerm"]?.ToString()) && string.IsNullOrEmpty(ViewData["Filter"]?.ToString()))
     {
-        <div class="urun-kart">
-            <div class="resim-alani">
-                <img src="@urun.ImageUrl" alt="@urun.Name">
-            </div>
-            <div class="bilgi-alani">
-                <h3>@urun.Name</h3>
+        @if (Model.Sliders != null)
+        {
+            @foreach (var slider in Model.Sliders)
+            {
+                @if (slider.Products != null && slider.Products.Any())
+                {
+                    <div class="bolum-basligi">@slider.Baslik</div>
 
-                <div class="fiyat-kutusu">
-                    @if (urun.OldPrice != null)
+                    <div class="kaydirmali-container">
+                        @foreach (var urun in slider.Products)
+                        {
+                            <div class="urun-kart">
+                                <div class="resim-alani">
+                                    @if (!string.IsNullOrEmpty(urun.ImageUrl))
+                                    {
+                                        <img src="@urun.ImageUrl" alt="@urun.Name">
+                                    }
+                                    else
+                                    {
+                                        <div style="color:white;">Resim Yok</div>
+                                    }
+                                </div>
+                                <div class="bilgi-alani">
+                                    <h3>@urun.Name</h3>
+
+                                    <div class="fiyat-kutusu">
+                                        @if (urun.OldPrice != null)
+                                        {
+                                            <span class="eski-fiyat">@urun.OldPrice AZN</span>
+                                        }
+                                        <div class="yeni-fiyat">@urun.Price AZN</div>
+                                    </div>
+
+                                    <button onclick="sepeteEkle('@urun.Name', @urun.Price)" class="ekle-btn">Sepete Ekle 🛒</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        }
+    }
+
+
+    <hr style="border-top: 2px solid #4f96d0; margin: 50px 0;" />
+
+    @if (ViewData["SearchActive"] != null && (bool)ViewData["SearchActive"])
+    {
+        <div class="bolum-basligi">Arama Sonuçları</div>
+    }
+    else if (ViewData["FiltreBaslik"] != null)
+    {
+        <div class="bolum-basligi">@ViewData["FiltreBaslik"]</div>
+    }
+    else
+    {
+        <div class="bolum-basligi">Tüm Ürünlerimiz</div>
+    }
+
+
+    <div class="urun-container">
+        @foreach (var item in Model.Products)
+        {
+            <div class="urun-kart">
+                <div class="resim-alani">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
                     {
-                        <span class="eski-fiyat">@urun.OldPrice AZN</span>
+                        <img src="@item.ImageUrl" alt="@item.Name">
                     }
-                    <span class="yeni-fiyat">@urun.Price AZN</span>
+                    else
+                    {
+                        <div style="color:white;">Resim Yok</div>
+                    }
                 </div>
 
-                <button class="ekle-btn" onclick="sepeteEkle('@urun.Name', @urun.Price)">Sepete Ekle</button>
-            </div>
-        </div>
-    }
-</div>
+                <div class="bilgi-alani">
+                    <h3>@item.Name</h3>
 
-@if (!Model.Any())
-{
-    <div style="text-align:center; color:white; padding:50px;">
-        <h3>Henüz ürün eklenmemiş.</h3>
-        <p>Admin panelinden ürün eklediğinizde burada görünecek.</p>
+                    <div class="fiyat-kutusu">
+                        @if (item.OldPrice != null)
+                        {
+                            <span class="eski-fiyat">@item.OldPrice AZN</span>
+                        }
+                        <div class="yeni-fiyat">@item.Price AZN</div>
+                    </div>
+
+                    <button onclick="sepeteEkle('@item.Name', @item.Price)" class="ekle-btn">Sepete Ekle 🛒</button>
+                </div>
+            </div>
+        }
     </div>
-}
+
+</div>

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PsMarketApp.Data;
 
@@ -10,9 +11,11 @@ using PsMarketApp.Data;
 namespace PsMarketApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251214172258_VitrinEklendi")]
+    partial class VitrinEklendi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.22");
@@ -37,46 +40,12 @@ namespace PsMarketApp.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("SliderId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("Vitrin")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SliderId");
-
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("PsMarketApp.Models.Slider", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Baslik")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Sliders");
-                });
-
-            modelBuilder.Entity("PsMarketApp.Models.Product", b =>
-                {
-                    b.HasOne("PsMarketApp.Models.Slider", "Slider")
-                        .WithMany("Products")
-                        .HasForeignKey("SliderId");
-
-                    b.Navigation("Slider");
-                });
-
-            modelBuilder.Entity("PsMarketApp.Models.Slider", b =>
-                {
-                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

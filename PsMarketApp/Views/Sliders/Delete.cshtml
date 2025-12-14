@@ -1,0 +1,50 @@
+﻿@model PsMarketApp.Models.Slider
+
+@{
+    ViewData["Title"] = "Slider Sil";
+}
+
+<div class="container mt-5 text-white">
+    <h1 class="text-white" style="border-bottom: 2px solid #00ffff; padding-bottom: 10px;">Slider Silme Onayı</h1>
+
+    @if (TempData["HataMesaji"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["HataMesaji"]
+        </div>
+    }
+
+    <h3 class="text-warning mt-4">Bu Slider'ı silmek istediğinizden emin misiniz?</h3>
+    <p class="text-danger">Eğer bu Slider'a bağlı ürünler varsa silme işlemi gerçekleşmeyecektir!</p>
+
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="row mt-4 p-3 border rounded" style="background-color: #0a165e;">
+                <dt class="col-sm-3 text-warning">
+                    @Html.DisplayNameFor(model => model.Baslik)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Baslik)
+                </dd>
+
+                @if (ViewData["UrunSayisi"] != null)
+                {
+                    <dt class="col-sm-3 text-warning">
+                        Bağlı Ürün Sayısı
+                    </dt>
+                    <dd class="col-sm-9">
+                        <span class="fw-bold @((int)ViewData["UrunSayisi"] > 0 ? "text-danger" : "text-success")">
+                            @ViewData["UrunSayisi"] adet
+                        </span>
+                    </dd>
+                }
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <input type="submit" value="Evet, Sil!" class="btn btn-danger btn-lg me-2" />
+                <a asp-action="Index" class="btn btn-secondary btn-lg">İptal</a>
+            </form>
+        </div>
+    </div>
+</div>

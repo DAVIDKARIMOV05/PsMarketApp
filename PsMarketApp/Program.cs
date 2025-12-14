@@ -1,6 +1,7 @@
 using PsMarketApp.Data;
 using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
 // 1. GÜVENLÝK SERVÝSÝNÝ EKLE
 builder.Services.AddAuthentication("CookieAuth")
@@ -54,6 +55,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.UseRouting();
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
