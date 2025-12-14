@@ -16,10 +16,64 @@
         gtag('js', new Date());
         gtag('config', 'G-Q45PWXBNF6');
     </script>
+
+    <style>
+        .admin-btn-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .admin-link {
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .admin-login {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .admin-logout {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        /* Mobilde buton üst üste binmesin diye */
+        @@media (max-width: 600px) {
+            .admin-btn-container
+
+        {
+            top: 10px;
+            right: 10px;
+        }
+
+        .admin-link {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        }
+    </style>
 </head>
 <body>
 
-    <header>
+    <header style="position: relative;">
+        <div class="admin-btn-container">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="/Account/Logout" class="admin-link admin-logout">Çıkış Yap (@User.Identity.Name)</a>
+            }
+            else
+            {
+                <a href="/Account/Login" class="admin-link admin-login">🔒 Admin Girişi</a>
+            }
+        </div>
+
         <div class="header-container">
             <a href="/">
                 <img src="~/images/Gemini_Generated_Image_roucdbroucdbrouc.png" alt="PS Plus Banner">

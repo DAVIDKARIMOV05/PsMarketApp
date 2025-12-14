@@ -2,6 +2,12 @@ using PsMarketApp.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+// 1. GÜVENLÝK SERVÝSÝNÝ EKLE
+builder.Services.AddAuthentication("CookieAuth")
+    .AddCookie("CookieAuth", config =>
+    {
+        config.LoginPath = "/Account/Login"; // Giriþ yapmayan buraya gitsin
+    });
 
 // 1. VERÝTABANI AYARI (SQLite)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -48,6 +54,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
