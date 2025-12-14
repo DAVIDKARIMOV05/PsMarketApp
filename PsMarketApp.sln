@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PsMarketApp", "PsMarketApp\PsMarketApp.csproj", "{3CDB6E59-FE85-4AC7-8C4F-F4EAB306FAFE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3CDB6E59-FE85-4AC7-8C4F-F4EAB306FAFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CDB6E59-FE85-4AC7-8C4F-F4EAB306FAFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CDB6E59-FE85-4AC7-8C4F-F4EAB306FAFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CDB6E59-FE85-4AC7-8C4F-F4EAB306FAFE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {765A3A31-D7E0-474E-A1A4-3D9797FCF6AC}
+	EndGlobalSection
+EndGlobal

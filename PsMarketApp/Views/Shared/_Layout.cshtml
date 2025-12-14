@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - En Ucuz PSN Bakiye</title>
+    <meta name="description" content="PS Plus Türkiye ve Azerbaycan için en ucuz PSN bakiye, GTA 5 ve oyun fiyatları.">
+
+    <link rel="stylesheet" href="~/css/still.css" />
+    <link rel="icon" type="image/jpg" href="~/images/icon2.jpg">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q45PWXBNF6"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-Q45PWXBNF6');
+    </script>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="/">
+                <img src="~/images/Gemini_Generated_Image_roucdbroucdbrouc.png" alt="PS Plus Banner">
+            </a>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <h3>İLETİŞİM</h3>
+            <p>WhatsApp: <a href="https://wa.me/+994513677405" style="color:white;">+994 51 367 74 05</a></p>
+            <br>
+            @if (ViewData["Title"]?.ToString() == "Ana Sayfa")
+            {
+                <a asp-controller="Home" asp-action="Hakkimizda" class="footer-link">ℹ️ Hakkımızda</a>
+            }
+            else
+            {
+                <a asp-controller="Home" asp-action="Index" class="footer-link">🏠 Ana Sayfa</a>
+            }
+        </div>
+    </footer>
+
+    <button onclick="sepetiAc()" class="sepet-buton">
+        🛒 Sepetim (<span id="sepet-sayisi">0</span>)
+    </button>
+
+    <div id="sepet-modal" class="sepet-modal">
+        <div class="sepet-icerik">
+            <span onclick="sepetiKapat()" class="kapat-tus">&times;</span>
+            <h2>Sepetiniz</h2>
+            <ul id="sepet-listesi">
+                <li>Sepetiniz boş.</li>
+            </ul>
+            <h3 id="toplam-fiyat">Toplam: 0 AZN</h3>
+            <button onclick="whatsappSiparisVer()" class="siparis-btn">WhatsApp İle Siparişi Tamamla</button>
+        </div>
+    </div>
+
+    <script>
+        let sepet = [];
+
+        function sepeteEkle(urunAdi, fiyat) {
+            sepet.push({ isim: urunAdi, fiyat: fiyat });
+            document.getElementById("sepet-sayisi").innerText = sepet.length;
+            alert(urunAdi + " sepete eklendi!");
+        }
+
+        function sepetiAc() {
+            const modal = document.getElementById("sepet-modal");
+            const liste = document.getElementById("sepet-listesi");
+            const toplamTutar = document.getElementById("toplam-fiyat");
+
+            modal.style.display = "block";
+            liste.innerHTML = "";
+
+            let toplam = 0;
+
+            sepet.forEach((urun, index) => {
+                let satir = document.createElement("li");
+                satir.innerHTML = `${urun.isim} - <b>${urun.fiyat} AZN</b> <button onclick="urunuSil(${index})" style="background:red;color:white;border:none;border-radius:3px;cursor:pointer;margin-left:10px;">Sil</button>`;
+                liste.appendChild(satir);
+                toplam += urun.fiyat;
+            });
+
+            if (sepet.length === 0) {
+                liste.innerHTML = "<li>Sepetiniz henüz boş.</li>";
+            }
+
+            toplamTutar.innerText = "Toplam: " + toplam + " AZN";
+        }
+
+        function urunuSil(index) {
+            sepet.splice(index, 1);
+            sepetiAc();
+            document.getElementById("sepet-sayisi").innerText = sepet.length;
+        }
+
+        function sepetiKapat() {
+            document.getElementById("sepet-modal").style.display = "none";
+        }
+
+        function whatsappSiparisVer() {
+            if (sepet.length === 0) {
+                alert("Sepetiniz boş, lütfen önce ürün ekleyin.");
+                return;
+            }
+
+            let mesaj = "Merhaba, web sitenizden şu ürünleri sipariş etmek istiyorum:%0A";
+            let toplam = 0;
+
+            sepet.forEach(urun => {
+                mesaj += `- ${urun.isim} (${urun.fiyat} AZN)%0A`;
+                toplam += urun.fiyat;
+            });
+
+            mesaj += `%0AToplam Tutar: ${toplam} AZN`;
+
+            let telefon = "+994513677405";
+
+            window.open(`https://wa.me/${telefon}?text=${mesaj}`, "_blank");
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

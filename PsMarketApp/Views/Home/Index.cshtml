@@ -1,0 +1,46 @@
+﻿@model IEnumerable<PsMarketApp.Models.Product>
+
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<div class="whatsapp-container">
+    <a href="https://wa.me/+994513677405" target="_blank" class="whatsapp-btn">
+        WhatsApp'tan Sifariş Ver
+    </a>
+</div>
+
+<h2 class="bolum-basligi">VİTRİN ÜRÜNLERİ (KAYDIRIN 👉)</h2>
+
+<div class="kaydirmali-container">
+
+    @foreach (var urun in Model)
+    {
+        <div class="urun-kart">
+            <div class="resim-alani">
+                <img src="@urun.ImageUrl" alt="@urun.Name">
+            </div>
+            <div class="bilgi-alani">
+                <h3>@urun.Name</h3>
+
+                <div class="fiyat-kutusu">
+                    @if (urun.OldPrice != null)
+                    {
+                        <span class="eski-fiyat">@urun.OldPrice AZN</span>
+                    }
+                    <span class="yeni-fiyat">@urun.Price AZN</span>
+                </div>
+
+                <button class="ekle-btn" onclick="sepeteEkle('@urun.Name', @urun.Price)">Sepete Ekle</button>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div style="text-align:center; color:white; padding:50px;">
+        <h3>Henüz ürün eklenmemiş.</h3>
+        <p>Admin panelinden ürün eklediğinizde burada görünecek.</p>
+    </div>
+}

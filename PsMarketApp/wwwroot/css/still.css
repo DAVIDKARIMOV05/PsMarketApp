@@ -1,0 +1,488 @@
+/* GENEL AYARLAR */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-image: url('../images/f8ea4onjck211.png');
+    background-size: cover;
+    background-position: center top; /* Resmi yukarı sabitledik */
+    background-attachment: fixed;
+    background-color: #0a0a2a;
+    color: white;
+}
+
+/* HEADER (ÜST KISIM) */
+header {
+    width: 100%;
+    padding: 20px 10px;
+    background: rgba(15, 34, 144, 0.9); /* Arka planı biraz daha belirgin yaptık */
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    margin-bottom: 30px;
+}
+
+header img {
+    max-width: 95%; 
+    width: 800px; /* Logoyu büyüttük */
+    height: auto;
+    border-radius: 10px;
+}
+
+/* WHATSAPP BUTONU */
+.whatsapp-container {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.whatsapp-btn {
+    background-color: #25D366;
+    color: white;
+    padding: 18px 40px; /* Butonu büyüttük */
+    text-decoration: none;
+    font-size: 1.5rem; /* Yazıyı büyüttük */
+    font-weight: bold;
+    border-radius: 50px;
+    box-shadow: 0 0 20px rgba(37, 211, 102, 0.6); /* Parlama efekti ekledik */
+    transition: transform 0.2s;
+    display: inline-block;
+    border: 2px solid white;
+}
+
+.whatsapp-btn:hover {
+    transform: scale(1.1); 
+    background-color: #1ebe57;
+}
+
+/* ÜRÜN KARTLARI DÜZENİ */
+.urun-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px; /* Kartlar arası boşluğu artırdık */
+    padding: 20px;
+    max-width: 1400px; /* Geniş ekranlarda daha yayvan dursun */
+    margin: 0 auto;
+}
+/* --- YATAY KAYDIRMA ALANI (SLIDER) CSS --- */
+
+/* 1. Bölüm Başlığı (PS Plus Yazısı) */
+.bolum-basligi {
+    text-align: center;      /* Yazıyı ortalar */
+    margin-top: 40px;        /* Üstten boşluk */
+    margin-bottom: 20px;     /* Alttan boşluk */
+    color: #ffd700;          /* Altın sarısı renk */
+    font-size: 1.5rem;       /* Yazı büyüklüğü */
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); /* Hafif parlama */
+}
+
+/* 2. Kaydırmalı Kapsayıcı (Şerit) */
+.kaydirmali-container {
+    display: flex;           /* İçindeki kutuları yan yana dizer */
+    overflow-x: auto;        /* Yatayda taşarsa kaydırma çubuğu çıkarır */
+    gap: 20px;               /* Kartlar arası 20px boşluk */
+    padding: 20px;           /* İç kenar boşluğu */
+    
+    /* Kaydırma hissiyatını güzelleştirir */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* iPhone'da akıcı kayması için */
+    
+    /* Sadece bu alan için hizalama ayarı */
+    justify-content: flex-start; 
+}
+
+/* 3. Şerit İçindeki Kartlar */
+.kaydirmali-container .urun-kart {
+    flex: 0 0 auto;  /* ÖNEMLİ: Kartların büzüşmesini engeller, sabit kalırlar */
+    width: 280px;    /* Her bir kartın sabit genişliği */
+    margin: 0;       /* Dış boşlukları sıfırla (gap kullanıyoruz) */
+}
+
+/* 4. Kaydırma Çubuğu Tasarımı (Daha şık görünmesi için) */
+.kaydirmali-container::-webkit-scrollbar {
+    height: 10px;    /* Çubuğun kalınlığı */
+}
+
+.kaydirmali-container::-webkit-scrollbar-track {
+    background: #050a30; /* Çubuğun arkasındaki yol rengi */
+    border-radius: 10px;
+}
+
+.kaydirmali-container::-webkit-scrollbar-thumb {
+    background: #4f96d0; /* Kaydırdığımız çubuğun rengi (Mavi) */
+    border-radius: 10px;
+    border: 2px solid #050a30; /* Etrafına ince bir boşluk */
+}
+
+/* --- MOBİL İÇİN ÖZEL AYAR --- */
+
+
+/* TEKİL ÜRÜN KARTI TASARIMI */
+.urun-kart {
+    background-color: #0f2290;
+    border: 3px solid #4f96d0;
+    border-radius: 20px;
+    width: 350px; /* KARTLARI BÜYÜTTÜK (Eskisi 300px idi) */
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s;
+    position: relative; /* Efektler için gerekli */
+}
+
+.urun-kart:hover {
+    transform: translateY(-10px);
+    border-color: #00ffff; /* Üstüne gelince neon mavi olur */
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+}
+
+.resim-alani {
+    width: 100%;
+    height: 290px; /* Resim alanını yükselttik */
+    background-color: #050a30; /* Resim arkası koyu lacivert */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+/* --- BU YENİ KOD (Yapıştırman gereken) --- */
+.resim-alani img {
+    width: 100%;       /* Genişliği kutuya zorla */
+    height: 100%;      /* Yüksekliği kutuya zorla */
+    object-fit: contain;; /* 'cover' demek: Kutuyu tamamen kapla, taşarsa kes. */
+    border-radius: 10px;
+}
+
+.bilgi-alani {
+    padding: 20px;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, #0f2290, #0a165e); /* Hafif geçişli arka plan */
+}
+
+.bilgi-alani h3 {
+    font-size: 1.4rem; /* Başlık fontunu büyüttük */
+    margin-bottom: 15px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.fiyat-kutusu {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: auto;
+    border: 1px solid #4f96d0;
+}
+
+.eski-fiyat {
+    text-decoration: line-through;
+    color: #ff6b6b; /* Eski fiyat rengini kırmızımsı yaptık */
+    font-size: 1.1rem;
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.yeni-fiyat {
+    color: #00ffff; /* Yeni fiyat parlak turkuaz */
+    font-size: 1.8rem; /* Fiyatı kocaman yaptık */
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0,255,255,0.5);
+}
+
+.teklif-suresi {
+    font-size: 0.9rem;
+    color: #ffd700; /* Sarı renk */
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* FOOTER */
+footer {
+    background-color: #050a30;
+    text-align: center;
+    /* Alttan 100px boşluk bıraktık ki Sepet butonu yazıyı kapatmasın */
+    padding: 40px 20px 100px 20px; 
+    margin-top: 60px;
+    border-top: 5px solid #4f96d0;
+}
+
+.footer-link {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.3rem;
+    border: 2px solid white;
+    padding: 10px 30px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.footer-link:hover {
+    background-color: white;
+    color: #050a30;
+}
+
+/* MOBİL UYUMLULUK */
+/* --- MOBİL UYUMLULUK AYARLARI (YAN YANA 2'Lİ SİSTEM) --- */
+@media (max-width: 600px) {
+    
+    /* 1. Kutu Aralarındaki Boşlukları Daraltalım */
+    .urun-container {
+        gap: 10px;     /* Masaüstünde 30px idi, mobilde 10px yeter */
+        padding: 10px; /* Kenarlardan çok boşluk kalmasın */
+    }
+
+    /* 2. Kart Genişliği Ayarı (Sihir Burada) */
+    .urun-kart {
+        /* Ekranın yarısından (50%), aradaki 10px boşluğu çıkararak hesapla */
+        width: calc(50% - 10px); 
+        max-width: none; /* Maksimum genişlik sınırını kaldır */
+    }
+    
+    /* 3. Resim Yüksekliği Ayarı */
+    .resim-alani {
+        height: 185px; /* Mobilde resim alanı çok yüksek olmasın, yer kaplamasın */
+    }
+
+    /* 4. Yazı Boyutlarını Küçültme (Kutu küçüldüğü için yazılar taşmasın) */
+    .bilgi-alani {
+        padding: 10px; /* İç boşluğu azalttık */
+    }
+
+    .bilgi-alani h3 {
+        font-size: 0.8rem; /* Başlık yazısını küçülttük */
+        margin-bottom: 5px;
+        min-height: 40px;  /* Başlıklar 2 satır olsa bile hizalı dursun */
+        overflow: hidden;  /* Çok uzun yazı olursa taşanı gizle */
+    }
+
+    .yeni-fiyat {
+        font-size: 1.1rem; /* Fiyatı biraz küçülttük ama hala belirgin */
+    }
+
+    .eski-fiyat {
+        font-size: 0.8rem;
+        display: block; /* Eski fiyatı yeni fiyatın üstüne al (yer darlığından) */
+        margin-bottom: 2px;
+    }
+
+    .ekle-btn {
+        font-size: 0.8rem; /* Buton yazısını küçülttük */
+        padding: 8px;
+    }
+    
+    /* Logoyu mobilde biraz küçültelim */
+    header img {
+        width: 100%;
+    }
+    .urun-kart {
+        
+        /* İŞTE TAM BURAYA: */
+        width: calc(50% - 10px); 
+        
+        /* Yanına şunu da ekle ki genişlik sınırı kalksın */
+        max-width: none; 
+    }
+    .kaydirmali-container .urun-kart {
+        width: 200px; /* Mobilde kartlar daha dar olsun ki ekrana 1.5 tane sığsın */
+    }
+    
+    .bolum-basligi {
+        font-size: 1.2rem;
+    }
+}
+/* SEPET BUTONU */
+.sepet-buton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ff9900;
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    z-index: 1000; /* Her şeyin üstünde dursun */
+}
+
+/* ÜRÜN İÇİNDEKİ EKLE BUTONU */
+.ekle-btn {
+    background-color: #25D366;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.ekle-btn:hover { background-color: #1ebe57; }
+
+/* SEPET PENCERESİ (MODAL) */
+.sepet-modal {
+    display: none; /* Başlangıçta gizli */
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8); /* Arka planı karart */
+}
+
+.sepet-icerik {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    color: black;
+    position: relative;
+    text-align: center;
+}
+
+.kapat-tus {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+#sepet-listesi {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+    max-height: 300px;
+    overflow-y: auto;
+    text-align: left;
+}
+
+#sepet-listesi li {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.siparis-btn {
+    background-color: #0f2290;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    width: 100%;
+}
+/* ... still.css dosyasının en altı ... */
+/* --- HAKKIMIZDA SAYFASI TASARIMI --- */
+
+.hakkimizda-container {
+    max-width: 900px;
+    margin: 0 auto; /* Ortala */
+    padding: 40px 20px;
+    text-align: center;
+    background-color: rgba(15, 34, 144, 0.5); /* Yarı saydam arka plan */
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    margin-bottom: 50px;
+}
+
+.hakkimizda-container h1 {
+    color: #ffd700; /* Altın sarısı */
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #4f96d0;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.hakkimizda-container h2 {
+    color: #00ffff; /* Turkuaz */
+    margin-top: 40px;
+    margin-bottom: 15px;
+}
+
+.hakkimizda-container p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #eee;
+    margin-bottom: 20px;
+}
+
+/* Özellik Kutuları (Yan Yana 3'lü) */
+.ozellikler-kutu {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.ozellik {
+    background-color: #050a30;
+    padding: 20px;
+    border-radius: 15px;
+    width: 30%; /* 3 tane yan yana sığsın */
+    min-width: 250px; /* Çok küçülmesin */
+    border: 1px solid #4f96d0;
+    transition: transform 0.3s;
+}
+
+.ozellik:hover {
+    transform: translateY(-5px);
+    border-color: #ffd700;
+}
+
+.emoji {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Liste Tasarımı */
+.nasil-calisir {
+    list-style-type: none;
+    text-align: left;
+    background-color: #0a165e;
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.nasil-calisir li {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.iletisim-alani {
+    margin-top: 50px;
+    padding: 20px;
+    border-top: 1px solid #4f96d0;
+}
+
+/* Telefondan girince kutular alt alta olsun */
+@media (max-width: 600px) {
+    .ozellik {
+        width: 100%; /* Telefondan tam genişlik */
+    }
+}
