@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration; // Bu eklediğimiz yeni kütüphane
+using Microsoft.Extensions.Configuration;
+using Npgsql; // PostgreSQL için eklendi
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     Args = args
-    // SuppressStatusMessages satırı kaldırıldı, çünkü hata veriyordu.
 });
 
 // 🛠️ KRİTİK DÜZELTME: Linux inotify (Status 139) Hatası İçin
@@ -27,10 +27,32 @@ builder.Services.AddAuthentication("CookieAuth")
         config.LoginPath = "/Account/Login";
     });
 
-// 1. VERİTABANI AYARI (SQLite)
-// Canlıya atarken Market.db dosyasının kopyalanmadığından emin olun (Copy to Output: Do not copy)
+// 🚀 POSTGRESQL AYARI (KALICI ÇÖZÜM)
+// Bu kod, Connection String'i Render'ın Environment Variables'ından (Ortam Değişkenleri) çeker.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Render'da kullanılan PostgreSQL URL'i, Entity Framework'ün beklediği formata çevrilir.
+// Eğer PostgreSQL bağlantı adresi "postgres://" ile başlıyorsa (Render'ın verdiği format), bu çevrim gereklidir.
+var databaseUrl = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+
+if (!string.IsNullOrEmpty(databaseUrl) && databaseUrl.StartsWith("postgres://"))
+{
+    var uri = new Uri(databaseUrl);
+    connectionString = new NpgsqlConnectionStringBuilder
+    {
+        Host = uri.Host,
+        Port = uri.Port,
+        Database = uri.AbsolutePath.Trim('/'),
+        Username = uri.UserInfo.Split(':')[0],
+        Password = uri.UserInfo.Split(':')[1],
+        SslMode = SslMode.Prefer,
+        TrustServerCertificate = true // Güvenli bağlantı ayarı
+    }.ToString();
+}
+
+// 1. VERİTABANI AYARI (PostgreSQL ile Güncellendi)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite("Data Source=Market.db"));
+    options.UseNpgsql(connectionString)); // UseNpgsql kullanıldı
 
 // 2. Servisleri ekle
 builder.Services.AddControllersWithViews();
@@ -44,12 +66,13 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
+        // Uygulama başlarken veritabanını PostgreSQL'de oluşturur/günceller
         context.Database.Migrate();
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Veritabanı oluşturulurken bir hata çıktı.");
+        logger.LogError(ex, "PostgreSQL veritabanı oluşturulurken bir hata çıktı.");
     }
 }
 
