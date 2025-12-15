@@ -79,4 +79,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+// Uygulamanın çalışacağı Port'u belirle (Bulut sisteminden gelen PORT veya varsayılan 8080)
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+
+// Uygulamayı tüm ağlara (0.0.0.0) açarak başlat
+app.Run($"http://0.0.0.0:{port}");
