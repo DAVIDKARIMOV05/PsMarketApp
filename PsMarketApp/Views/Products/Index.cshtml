@@ -1,53 +1,81 @@
 ﻿@model IEnumerable<PsMarketApp.Models.Product>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Ürünleri Yönet";
 }
 
-<h1>Index</h1>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="bolum-basligi" style="margin:0; text-align:left;">📋 Ürün Listesi</h1>
+        <a asp-action="Create" class="ekle-btn" style="width: auto; padding: 10px 30px; text-decoration:none;">
+            + Yeni Ürün Ekle
+        </a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OldPrice)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OldPrice)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="admin-table-wrapper">
+        <table class="neon-table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Slider)</th>
+                    <th>Görsel</th>
+                    <th>@Html.DisplayNameFor(model => model.Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.Price)</th>
+                    <th>@Html.DisplayNameFor(model => model.OldPrice)</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="color: #ff9f43; font-weight: 500;">
+                            @if (item.Slider != null)
+                            {
+                                <span>📂 @item.Slider.Baslik</span>
+                            }
+                            else
+                            {
+                                <span style="color: #666; font-style: italic;">Listesiz</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" class="table-img" alt="@item.Name" />
+                            }
+                            else
+                            {
+                                <span style="color:#aaa; font-size:0.8rem;">Resim Yok</span>
+                            }
+                        </td>
+
+                        <td style="font-weight:bold; color:white;">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+
+                        <td style="color:#00ffff; font-weight:bold;">
+                            @Html.DisplayFor(modelItem => item.Price) ₺
+                        </td>
+
+                        <td style="color:#ff6b6b; text-decoration:line-through;">
+                            @if (item.OldPrice != null)
+                            {
+                                @Html.DisplayFor(modelItem => item.OldPrice) <span>₺</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
+
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="action-btn btn-neon-edit">✏️ Düzenle</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="action-btn btn-neon-detail">🔍 Detay</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="action-btn btn-neon-delete">🗑️ Sil</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

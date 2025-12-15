@@ -1,16 +1,34 @@
-using PsMarketApp.Data;
+ï»¿using PsMarketApp.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration; // Bu eklediÄŸimiz yeni kÃ¼tÃ¼phane
 
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args
+    // SuppressStatusMessages satÄ±rÄ± kaldÄ±rÄ±ldÄ±, Ã§Ã¼nkÃ¼ hata veriyordu.
+});
 
-var builder = WebApplication.CreateBuilder(args);
-// 1. GÜVENLÝK SERVÝSÝNÝ EKLE
+// ðŸ› ï¸ KRÄ°TÄ°K DÃœZELTME: Linux inotify (Status 139) HatasÄ± Ä°Ã§in
+// VarsayÄ±lan yapÄ±landÄ±rma izleyicilerini temizleyip, "izlemesiz" (reloadOnChange: false) olarak yeniden ekliyoruz.
+builder.Configuration.Sources.Clear();
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
+builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false);
+builder.Configuration.AddEnvironmentVariables();
+
+// 1. GÃœVENLÄ°K SERVÄ°SÄ°NÄ° EKLE
 builder.Services.AddAuthentication("CookieAuth")
     .AddCookie("CookieAuth", config =>
     {
-        config.LoginPath = "/Account/Login"; // Giriþ yapmayan buraya gitsin
+        config.LoginPath = "/Account/Login";
     });
 
-// 1. VERÝTABANI AYARI (SQLite)
+// 1. VERÄ°TABANI AYARI (SQLite)
+// CanlÄ±ya atarken Market.db dosyasÄ±nÄ±n kopyalanmadÄ±ÄŸÄ±ndan emin olun (Copy to Output: Do not copy)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=Market.db"));
 
@@ -19,25 +37,23 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// 3. OTOMATÝK VERÝTABANI OLUÞTURUCU (Hata Çözücü Kýsým)
-// Bu kýsým, site açýlýrken tablolarýn oluþmasýný garanti eder.
+// 3. OTOMATÄ°K VERÄ°TABANI OLUÅžTURUCU
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        // Veritabanýný oluþturur veya günceller
         context.Database.Migrate();
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Veritabaný oluþturulurken bir hata çýktý.");
+        logger.LogError(ex, "VeritabanÄ± oluÅŸturulurken bir hata Ã§Ä±ktÄ±.");
     }
 }
 
-// 4. Diðer Ayarlar
+// 4. DiÄŸer Ayarlar
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -46,7 +62,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Avif resim desteði (Senin kodundan)
+// Avif resim desteÄŸi
 var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
 provider.Mappings[".avif"] = "image/avif";
 app.UseStaticFiles(new StaticFileOptions
@@ -55,7 +71,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.UseRouting();
-app.UseStaticFiles();
+app.UseStaticFiles(); // wwwroot eriÅŸimi iÃ§in
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -1,42 +1,79 @@
 ﻿@model PsMarketApp.Models.Product
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Ürün Detayı";
 }
 
-<h1>Details</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
 
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OldPrice)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OldPrice)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+            <div class="admin-card card-sari" style="padding: 40px; position: relative;">
+
+                <h2 class="text-center mb-5" style="color: #ffd700; text-transform: uppercase; font-weight: bold; text-shadow: 0 0 15px rgba(255, 215, 0, 0.6); letter-spacing: 2px;">
+                    🔍 Ürün İnceleme
+                </h2>
+
+                <div class="row align-items-center">
+
+                    <div class="col-md-5 mb-4 mb-md-0">
+                        <div style="padding: 10px; border: 2px solid #ffd700; border-radius: 15px; background: rgba(0,0,0,0.3); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);">
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <img src="@Model.ImageUrl" alt="@Model.Name" style="width: 100%; border-radius: 10px; display: block;" />
+                            }
+                            else
+                            {
+                                <div class="text-center py-5" style="color: #ffd700;">
+                                    <span>📷 Resim Yok</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-7">
+                        <dl class="row" style="font-size: 1.1rem;">
+
+                            <dt class="col-sm-4" style="color: #ffd700; text-align: right;">📦 Ürün Adı:</dt>
+                            <dd class="col-sm-8" style="color: white; font-weight: bold; font-size: 1.3rem;">
+                                @Html.DisplayFor(model => model.Name)
+                            </dd>
+
+                            <dt class="col-sm-4" style="color: #25D366; text-align: right;">💰 Fiyat:</dt>
+                            <dd class="col-sm-8" style="color: #25D366; font-weight: bold; font-size: 1.4rem; text-shadow: 0 0 10px rgba(37, 211, 102, 0.4);">
+                                @Html.DisplayFor(model => model.Price) ₺
+                            </dd>
+
+                            <dt class="col-sm-4" style="color: #ff6b6b; text-align: right;">📉 Eski Fiyat:</dt>
+                            <dd class="col-sm-8" style="color: #ff6b6b;">
+                                @if (Model.OldPrice != null)
+                                {
+                                    <span style="text-decoration: line-through; opacity: 0.8;">@Html.DisplayFor(model => model.OldPrice) ₺</span>
+                                }
+                                else
+                                {
+                                    <span style="color: #aaa; font-size: 0.9rem;">- Yok -</span>
+                                }
+                            </dd>
+
+                        </dl>
+
+                        <div class="d-flex gap-3 mt-4">
+                            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-lg flex-grow-1"
+                               style="background: transparent; border: 2px solid #00ffff; color: #00ffff; font-weight: bold; border-radius: 50px; transition: all 0.3s;">
+                                ✏️ Düzenle
+                            </a>
+
+                            <a asp-action="Index" class="btn btn-lg flex-grow-1"
+                               style="background: #ffd700; color: #000; font-weight: bold; border-radius: 50px; border: none; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);">
+                                🔙 Listeye Dön
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>

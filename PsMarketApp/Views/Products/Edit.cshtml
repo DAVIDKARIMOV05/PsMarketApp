@@ -1,49 +1,105 @@
 ﻿@model PsMarketApp.Models.Product
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Ürünü Düzenle";
 }
 
-<h1>Edit</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
 
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+            <div class="admin-card card-mavi" style="padding: 40px; position: relative; overflow: hidden;">
+
+                <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(0, 255, 255, 0.2); filter: blur(50px); border-radius: 50%;"></div>
+
+                <h2 class="text-center mb-5" style="color: #00ffff; text-transform: uppercase; font-weight: bold; text-shadow: 0 0 15px rgba(0, 255, 255, 0.6); letter-spacing: 2px;">
+                    ✏️ Ürünü Düzenle
+                </h2>
+
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="form-group mb-4">
+                        <label asp-for="Name" class="control-label" style="color: #ffd700; font-weight: bold; font-size: 1.1rem;">📦 Ürün Adı</label>
+                        <input asp-for="Name" class="form-control"
+                               style="background: rgba(0,0,0,0.4); border: 1px solid #ffd700; color: white; padding: 12px;" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4 p-3 rounded" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0, 255, 255, 0.3);">
+                        <label asp-for="ImageUrl" class="control-label" style="color: #00ffff; font-weight: bold;">🖼️ Resim Linki</label>
+
+                        <div class="d-flex align-items-center gap-3 mt-2">
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <div style="width: 80px; height: 80px; flex-shrink: 0; border: 2px solid #00ffff; border-radius: 10px; overflow: hidden;">
+                                    <img src="@Model.ImageUrl" style="width: 100%; height: 100%; object-fit: cover;" />
+                                </div>
+                            }
+
+                            <input asp-for="ImageUrl" class="form-control" placeholder="https://..."
+                                   style="background: rgba(0,0,0,0.5); border: 1px solid #00ffff; color: white;" />
+                        </div>
+                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-4">
+                            <label asp-for="Price" class="control-label" style="color: #25D366; font-weight: bold;">💰 Fiyat (AZN)</label>
+                            <input asp-for="Price" type="number" step="0.01" class="form-control"
+                                   style="background: rgba(0,0,0,0.4); border: 1px solid #25D366; color: white; font-size: 1.2rem;" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 form-group mb-4">
+                            <label asp-for="OldPrice" class="control-label" style="color: #ff6b6b; font-weight: bold;">📉 Eski Fiyat</label>
+                            <input asp-for="OldPrice" type="number" step="0.01" class="form-control"
+                                   style="background: rgba(0,0,0,0.4); border: 1px solid #ff6b6b; color: white; font-size: 1.2rem;" />
+                            <span asp-validation-for="OldPrice" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4 p-3 rounded position-relative" style="border: 2px dashed #ff9f43; background: rgba(255, 159, 67, 0.05);">
+                        <span style="position: absolute; top: -12px; left: 20px; background: #0a0a2a; padding: 0 10px; color: #ff9f43; font-weight: bold;">📂 Slider / Kategori Yönetimi</span>
+
+                        <label class="small text-muted mt-2">Mevcut bir listeye taşı:</label>
+                        <select asp-for="SliderId" class="form-control mb-3" asp-items="ViewBag.SliderId"
+                                style="background: rgba(0,0,0,0.6); border: 1px solid #ff9f43; color: white; height: 50px;">
+                            <option value="">-- Listesiz (Sadece Ürün) --</option>
+                        </select>
+                        <span asp-validation-for="SliderId" class="text-danger"></span>
+
+                        <div class="text-center text-white my-2">- VEYA -</div>
+
+                        <label for="YeniSliderIsmi" class="small text-muted">Yeni bir liste oluştur ve buraya ekle:</label>
+                        <input name="YeniSliderIsmi" id="YeniSliderIsmi" class="form-control" placeholder="➕ Yeni Slider İsmi Yaz..."
+                               style="background: rgba(0,0,0,0.6); border: 1px solid #ff9f43; color: white;" />
+                    </div>
+
+                    
+
+                    <div class="d-grid gap-3">
+                        <button type="submit" class="btn btn-lg"
+                                style="background: linear-gradient(45deg, #00ffff, #008b8b); color: #000; font-weight: bold; border-radius: 50px; border: none; box-shadow: 0 0 20px rgba(0, 255, 255, 0.4); transition: transform 0.2s;">
+                            💾 DEĞİŞİKLİKLERİ KAYDET
+                        </button>
+
+                        <a asp-action="Index" class="btn btn-lg"
+                           style="background: transparent; border: 2px solid #ff6b6b; color: #ff6b6b; font-weight: bold; border-radius: 50px;">
+                            ❌ İPTAL ET VE DÖN
+                        </a>
+                    </div>
+
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OldPrice" class="control-label"></label>
-                <input asp-for="OldPrice" class="form-control" />
-                <span asp-validation-for="OldPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

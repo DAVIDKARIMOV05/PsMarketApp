@@ -7,6 +7,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\images\1000.png" />
+    <Content Remove="wwwroot\images\400.png" />
+    <Content Remove="wwwroot\images\500.png" />
+    <Content Remove="wwwroot\images\deluxe12ay.avif" />
+    <Content Remove="wwwroot\images\deluxe1ay.avif" />
+    <Content Remove="wwwroot\images\deluxe3ay.avif" />
+    <Content Remove="wwwroot\images\e1e3a5c9-f220-4154-9969-8d375efc6453.avif" />
+    <Content Remove="wwwroot\images\esential12ay.avif" />
+    <Content Remove="wwwroot\images\esential3ay.avif" />
+    <Content Remove="wwwroot\images\extra12ay.avif" />
+    <Content Remove="wwwroot\images\extra1ay.jpeg" />
+    <Content Remove="wwwroot\images\extra3ay.avif" />
+    <Content Remove="wwwroot\images\f8ea4onjck211.png" />
+    <Content Remove="wwwroot\images\Forza Horizon 5 Standard Edition.jpg" />
+    <Content Remove="wwwroot\images\Gemini_Generated_Image_1yq97w1yq97w1yq9.png" />
+    <Content Remove="wwwroot\images\Gemini_Generated_Image_lgndp1lgndp1lgnd.png" />
+    <Content Remove="wwwroot\images\Gemini_Generated_Image_t5foidt5foidt5fo.png" />
+    <Content Remove="wwwroot\images\gran turismo 7.webp" />
+    <Content Remove="wwwroot\images\icon2.jpg" />
+    <Content Remove="wwwroot\images\jyEAtsjP4FgLyZ9XDJmW2Knw.avif" />
+    <Content Remove="wwwroot\images\Microsoft Flight Simulator 2024- Standard Edition.avif" />
+    <Content Remove="wwwroot\images\Mortal.jpg" />
+    <Content Remove="wwwroot\images\The Long Dark PS4 &amp; PS5.avif" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22">

@@ -1,35 +1,67 @@
 ﻿@model IEnumerable<PsMarketApp.Models.Slider>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Slider Yönetimi";
 }
 
-<h1>Index</h1>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="bolum-basligi" style="margin:0; text-align:left; color: #ff9f43; text-shadow: 0 0 10px rgba(255, 159, 67, 0.5);">
+            📂 Slider / Kategori Listesi
+        </h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Baslik)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Baslik)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <a asp-action="Create" class="ekle-btn"
+           style="width: auto; padding: 10px 30px; text-decoration:none; background-color: #ff9f43; color: black; font-weight: bold;">
+            + Yeni Liste Oluştur
+        </a>
+    </div>
+
+    <div class="admin-table-wrapper" style="border-color: rgba(255, 159, 67, 0.3);">
+        <table class="neon-table">
+            <thead>
+                <tr>
+                    <th style="color: #ff9f43;">📁 Liste Başlığı</th>
+                    <th style="color: #ff9f43;">📦 İçindeki Ürün Sayısı</th>
+                    <th style="color: #ff9f43;">⚙️ İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="font-weight:bold; color:white; font-size: 1.1rem;">
+                            <span style="color: #ff9f43; margin-right: 10px;">📂</span>
+                            @Html.DisplayFor(modelItem => item.Baslik)
+                        </td>
+
+                        <td>
+                            @if (item.Products != null && item.Products.Any())
+                            {
+                                <span class="badge" style="background-color: rgba(255, 159, 67, 0.2); color: #ff9f43; border: 1px solid #ff9f43; font-size: 0.9rem;">
+                                    @item.Products.Count Adet Ürün
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge" style="background-color: rgba(255, 255, 255, 0.1); color: #aaa; border: 1px solid #666;">
+                                    Boş Liste
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="action-btn"
+                               style="border: 1px solid #ff9f43; color: #ff9f43; background: rgba(255, 159, 67, 0.1);">
+                                ✏️ Düzenle
+                            </a>
+
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="action-btn btn-neon-delete">
+                                🗑️ Sil
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

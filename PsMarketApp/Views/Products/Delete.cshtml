@@ -1,45 +1,84 @@
 ﻿@model PsMarketApp.Models.Product
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Ürünü Sil";
 }
 
-<h1>Delete</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OldPrice)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OldPrice)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+            <div class="admin-card" style="padding: 40px; position: relative; background: rgba(50, 0, 0, 0.6); border: 2px solid #ff4d4d; box-shadow: 0 0 30px rgba(255, 77, 77, 0.3); border-radius: 20px;">
+
+                <div class="text-center mb-4">
+                    <div style="font-size: 4rem; margin-bottom: 10px;">⚠️</div>
+                    <h2 style="color: #ff4d4d; text-transform: uppercase; font-weight: bold; text-shadow: 0 0 15px rgba(255, 77, 77, 0.6); letter-spacing: 2px;">
+                        ÜRÜNÜ SİLMEK ÜZERESİNİZ!
+                    </h2>
+                    <p style="color: #ccc; font-size: 1.1rem;">
+                        Bu işlem geri alınamaz. <strong>"@Model.Name"</strong> adlı ürünü kalıcı olarak silmek istediğinize emin misiniz?
+                    </p>
+                </div>
+
+                <hr style="border-top: 1px solid #ff4d4d; opacity: 0.5; margin-bottom: 30px;">
+
+                <div class="row align-items-center">
+
+                    <div class="col-md-4 text-center mb-4 mb-md-0">
+                        <div style="padding: 5px; border: 1px solid #ff4d4d; border-radius: 10px; background: rgba(0,0,0,0.3);">
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <img src="@Model.ImageUrl" alt="@Model.Name" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;" />
+                            }
+                            else
+                            {
+                                <div class="py-5 text-muted">Resim Yok</div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <dl class="row mb-0" style="color: white; font-size: 1.1rem;">
+
+                            <dt class="col-sm-4" style="color: #ff4d4d;">📦 Ürün Adı:</dt>
+                            <dd class="col-sm-8 fw-bold">@Html.DisplayFor(model => model.Name)</dd>
+
+                            <dt class="col-sm-4" style="color: #25D366;">💰 Fiyat:</dt>
+                            <dd class="col-sm-8 fw-bold" style="color: #25D366;">@Html.DisplayFor(model => model.Price) ₺</dd>
+
+                            <dt class="col-sm-4" style="color: #ff9f43;">📂 Kategori:</dt>
+                            <dd class="col-sm-8" style="color: #ff9f43;">
+                                @if (Model.Slider != null)
+                                {
+                                    <span>@Model.Slider.Baslik</span>
+                                }
+                                else
+                                {
+                                    <span>Listesiz</span>
+                                }
+                            </dd>
+
+                        </dl>
+                    </div>
+                </div>
+
+                <hr style="border-top: 1px solid #ff4d4d; opacity: 0.5; margin: 30px 0;">
+
+                <form asp-action="Delete" class="d-flex gap-3 justify-content-center">
+                    <input type="hidden" asp-for="Id" />
+
+                    <a asp-action="Index" class="btn btn-lg px-4"
+                       style="background: transparent; border: 2px solid white; color: white; font-weight: bold; border-radius: 50px; transition: 0.3s;">
+                        🛡️ HAYIR, İPTAL ET
+                    </a>
+
+                    <button type="submit" class="btn btn-lg px-5"
+                            style="background: #ff4d4d; color: white; font-weight: bold; border-radius: 50px; border: none; box-shadow: 0 0 20px rgba(255, 77, 77, 0.6); transition: 0.3s;">
+                        🗑️ EVET, SİL
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
 </div>
