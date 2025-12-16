@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using System;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -18,41 +19,59 @@ builder.Configuration.Sources.Clear();
 builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
 builder.Configuration.AddEnvironmentVariables();
 
-// 2. VERİTABANI BAĞLANTISI (RENDER & LOCAL UYUMLU)
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-var databaseUrl = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+// ============================================================
+// 🛠️ DATABASE BAĞLANTISI AYARLAMA (RENDER İÇİN ÖZEL)
+// ============================================================
+var connectionString = "";
 
-// Eğer Render'dan bir URL geliyorsa, onu Npgsql formatına çevir
-if (!string.IsNullOrEmpty(databaseUrl) && databaseUrl.StartsWith("postgres://"))
+// 1. Önce Render'dan gelen "ConnectionStrings__DefaultConnection" değişkenine bak.
+var renderDbUrl = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+
+if (!string.IsNullOrEmpty(renderDbUrl))
 {
+    // Render URL'i "postgres://" ile başlıyorsa onu parçalayalım
     try
     {
-        var uri = new Uri(databaseUrl);
-        var userInfo = uri.UserInfo.Split(':');
+        var databaseUri = new Uri(renderDbUrl);
+        var userInfo = databaseUri.UserInfo.Split(':');
+
         var builderDb = new NpgsqlConnectionStringBuilder
         {
-            Host = uri.Host,
-            Port = uri.Port,
-            Database = uri.AbsolutePath.Trim('/'),
+            Host = databaseUri.Host,
+            Port = databaseUri.Port,
             Username = userInfo[0],
             Password = userInfo[1],
-            SslMode = SslMode.Prefer,
-            TrustServerCertificate = true,
-            Pooling = true // Performans için
+            Database = databaseUri.LocalPath.TrimStart('/'),
+            SslMode = SslMode.Prefer, // Render SSL gerektirir
+            TrustServerCertificate = true // Sertifika hatası vermemesi için
         };
         connectionString = builderDb.ToString();
+        Console.WriteLine("--> Render PostgreSQL bağlantısı başarıyla oluşturuldu.");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"HATA: Render URL'i çevrilemedi: {ex.Message}");
+        Console.WriteLine($"--> Render URL dönüştürme hatası: {ex.Message}");
     }
 }
+else
+{
+    // Render değişkeni yoksa (Localde çalışıyorsak) appsettings.json'a bak
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+}
 
-// PostgreSQL Servisini Ekle
+// Son kontrol: Eğer connectionString hala boşsa veya null ise varsayılan bir değer ata (uygulama çökmesin diye)
+if (string.IsNullOrEmpty(connectionString))
+{
+    Console.WriteLine("--> UYARI: Bağlantı dizesi bulunamadı!");
+}
+
+// Veritabanı Servisini Ekle
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// 3. DİĞER SERVİSLER
+// ============================================================
+
+// Diğer Servisler
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication("CookieAuth")
     .AddCookie("CookieAuth", config =>
@@ -62,39 +81,35 @@ builder.Services.AddAuthentication("CookieAuth")
 
 var app = builder.Build();
 
-// 4. OTOMATİK TABLO OLUŞTURMA (MIGRATION)
-// Bu kısım veritabanı boşsa tabloları oluşturur.
+// OTOMATİK MIGRATION (Tabloları Oluşturma)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        Console.WriteLine("Veritabanı tabloları kontrol ediliyor...");
+        // Veritabanını oluşturur
         context.Database.Migrate();
-        Console.WriteLine("Veritabanı tabloları başarıyla güncellendi/oluşturuldu.");
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        // Hatayı hem konsola hem loga basar
-        Console.WriteLine($"KRİTİK HATA: Veritabanı oluşturulamadı: {ex.Message}");
-        logger.LogError(ex, "Veritabanı oluşturulurken bir hata çıktı.");
+        Console.WriteLine($"--> Veritabanı Migrate Hatası: {ex.Message}");
     }
 }
 
-// 5. HATA YÖNETİMİ VE HTTPS AYARLARI
+// Hata Yönetimi
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // Render zaten HTTPS yaptığı için bu satırı KAPATIYORUZ (Hata sebebini engellemek için)
-    // app.UseHsts(); 
+    // Hata detaylarını görmek için Development modunda olmasak bile hatayı açabiliriz (geçici olarak)
+    app.UseDeveloperExceptionPage();
+    // app.UseExceptionHandler("/Home/Error"); 
+}
+else
+{
+    app.UseDeveloperExceptionPage();
 }
 
-// Render'da sonsuz döngüye girmemesi için bunu da KAPATIYORUZ
-// app.UseHttpsRedirection(); 
-
-// Statik dosyalar (css, js, img)
+// Statik Dosyalar
 var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
 provider.Mappings[".avif"] = "image/avif";
 app.UseStaticFiles(new StaticFileOptions
@@ -110,6 +125,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// PORT AYARI (Render için zorunlu)
+// Port Ayarı
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Run($"http://0.0.0.0:{port}");
