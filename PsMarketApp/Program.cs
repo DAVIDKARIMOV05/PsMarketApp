@@ -14,55 +14,70 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     Args = args
 });
 
-// 1. AYARLARI YÜKLE
+// 1. AYARLARI TEMİZLE VE YÜKLE
 builder.Configuration.Sources.Clear();
 builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
 builder.Configuration.AddEnvironmentVariables();
 
 // ============================================================
-// 🛠️ DATABASE BAĞLANTISI AYARLAMA (RENDER İÇİN ÖZEL)
+// 🛠️ BAĞLANTIYI BULMA VE OLUŞTURMA (GÜÇLENDİRİLMİŞ)
 // ============================================================
-var connectionString = "";
+string connectionString = null;
 
-// 1. Önce Render'dan gelen "ConnectionStrings__DefaultConnection" değişkenine bak.
-var renderDbUrl = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+// Adım 1: Render Environment Variable Kontrolü (Senin eklediğin)
+var envVar = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
 
-if (!string.IsNullOrEmpty(renderDbUrl))
+// Adım 2: Eğer o yoksa, Render'ın bazen otomatik verdiği isme bak
+if (string.IsNullOrEmpty(envVar))
 {
-    // Render URL'i "postgres://" ile başlıyorsa onu parçalayalım
-    try
-    {
-        var databaseUri = new Uri(renderDbUrl);
-        var userInfo = databaseUri.UserInfo.Split(':');
+    envVar = Environment.GetEnvironmentVariable("DATABASE_URL");
+}
 
-        var builderDb = new NpgsqlConnectionStringBuilder
-        {
-            Host = databaseUri.Host,
-            Port = databaseUri.Port,
-            Username = userInfo[0],
-            Password = userInfo[1],
-            Database = databaseUri.LocalPath.TrimStart('/'),
-            SslMode = SslMode.Prefer, // Render SSL gerektirir
-            TrustServerCertificate = true // Sertifika hatası vermemesi için
-        };
-        connectionString = builderDb.ToString();
-        Console.WriteLine("--> Render PostgreSQL bağlantısı başarıyla oluşturuldu.");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"--> Render URL dönüştürme hatası: {ex.Message}");
-    }
+// Adım 3: Eğer hala yoksa, appsettings.json'dan (Local) okumayı dene
+if (string.IsNullOrEmpty(envVar))
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 }
 else
 {
-    // Render değişkeni yoksa (Localde çalışıyorsak) appsettings.json'a bak
-    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    // Render'dan gelen URL'i Npgsql formatına çevir
+    try
+    {
+        // "postgres://" ile başlıyorsa çevirme işlemi yap
+        if (envVar.StartsWith("postgres://"))
+        {
+            var databaseUri = new Uri(envVar);
+            var userInfo = databaseUri.UserInfo.Split(':');
+
+            var builderDb = new NpgsqlConnectionStringBuilder
+            {
+                Host = databaseUri.Host,
+                Port = databaseUri.Port,
+                Username = userInfo[0],
+                Password = userInfo[1],
+                Database = databaseUri.LocalPath.TrimStart('/'),
+                SslMode = SslMode.Prefer,
+                TrustServerCertificate = true // Sertifika hatasını engelle
+            };
+            connectionString = builderDb.ToString();
+        }
+        else
+        {
+            // postgres:// ile başlamıyorsa direkt kullan
+            connectionString = envVar;
+        }
+    }
+    catch (Exception ex)
+    {
+        // Hata varsa uygulama başlarken patlasın ki loglarda görelim
+        throw new Exception($"KRİTİK HATA: Render URL'i çevrilemedi! Gelen Veri: {envVar} - Hata: {ex.Message}");
+    }
 }
 
-// Son kontrol: Eğer connectionString hala boşsa veya null ise varsayılan bir değer ata (uygulama çökmesin diye)
+// SON KONTROL: Eğer connectionString hala boşsa hata ver
 if (string.IsNullOrEmpty(connectionString))
 {
-    Console.WriteLine("--> UYARI: Bağlantı dizesi bulunamadı!");
+    throw new Exception("KRİTİK HATA: Bağlantı adresi (Connection String) BULUNAMADI! Render Environment Variable'larını kontrol et.");
 }
 
 // Veritabanı Servisini Ekle
@@ -71,7 +86,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // ============================================================
 
-// Diğer Servisler
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication("CookieAuth")
     .AddCookie("CookieAuth", config =>
@@ -81,33 +95,25 @@ builder.Services.AddAuthentication("CookieAuth")
 
 var app = builder.Build();
 
-// OTOMATİK MIGRATION (Tabloları Oluşturma)
+// OTOMATİK TABLO OLUŞTURMA (MIGRATE)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        // Veritabanını oluşturur
-        context.Database.Migrate();
+        context.Database.Migrate(); // Tabloları oluştur
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"--> Veritabanı Migrate Hatası: {ex.Message}");
+        // Eğer veritabanı bağlantısı yanlışsa burada hata verir
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Veritabanı Migrate işlemi başarısız oldu.");
     }
 }
 
-// Hata Yönetimi
-if (!app.Environment.IsDevelopment())
-{
-    // Hata detaylarını görmek için Development modunda olmasak bile hatayı açabiliriz (geçici olarak)
-    app.UseDeveloperExceptionPage();
-    // app.UseExceptionHandler("/Home/Error"); 
-}
-else
-{
-    app.UseDeveloperExceptionPage();
-}
+// Hata Yönetimi (Detayları görmek için Developer Page'i zorluyoruz)
+app.UseDeveloperExceptionPage();
 
 // Statik Dosyalar
 var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
@@ -125,6 +131,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Port Ayarı
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Run($"http://0.0.0.0:{port}");
