@@ -10,63 +10,49 @@
 
 html, body {
     width: 100%;
-    overflow-x: hidden; /* Sağa taşmayı engelle */
+    /* 🚨 SAĞA KAYMA/BOŞLUK SORUNU İÇİN KESİN ÇÖZÜM */
+    overflow-x: hidden;
     margin: 0;
     padding: 0;
 }
 
 body {
-    background-image: url('../images/f8ea4onjck211.png'); /* Arka plan resmi */
+    background-image: url('../images/f8ea4onjck211.png');
     background-size: cover;
     background-position: center top;
     background-attachment: fixed;
-    background-color: #0a0a2a; /* Resim yüklenmezse lacivert */
+    background-color: #0a0a2a;
     color: white;
     padding-bottom: 80px;
     position: relative;
 }
-
-/* 🔥 EKSTRA: GLOBAL SCROLLBAR (Tüm Sayfa İçin Neon Çubuk) */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #050a30;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #4f96d0;
-    border-radius: 10px;
-    border: 2px solid #050a30;
-}
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: #00ffff;
-    }
 
 /* =========================================
    2. HEADER (ÜST KISIM) & LOGO
    ========================================= */
 header {
     width: 100%;
+    /* Padding sağdan soldan taşma yapmasın diye kontrol altına alındı */
     padding: 20px 10px;
     background: rgba(15, 34, 144, 0.9);
     text-align: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     margin-bottom: 30px;
     position: relative;
-    z-index: 500;
+    /* Header'ın dışarı taşmasını engelle */
+    max-width: 100vw;
 }
 
     header img {
+        /* 🚨 LOGO DÜZELTMESİ: Sabit 600px yerine esnek yapı */
         width: 100%;
-        max-width: 500px; /* Logo çok devasa olmasın */
+        max-width: 600px; /* Maksimum büyüyebileceği sınır */
         height: auto;
+        
         display: inline-block;
     }
 
-/* Admin Butonları (Sağ Üst) */
+/* Admin Butonları (Sağ Üst Köşe - Masaüstü) */
 .admin-btn-container {
     position: absolute;
     top: 20px;
@@ -83,12 +69,7 @@ header {
     border-radius: 5px;
     font-size: 14px;
     color: white;
-    transition: transform 0.2s;
 }
-
-    .admin-link:hover {
-        transform: scale(1.05);
-    }
 
 .admin-login {
     background-color: #007bff;
@@ -110,7 +91,7 @@ header {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 25px; /* Kartlar arası boşluk */
+    gap: 25px;
     padding: 20px;
     max-width: 1400px;
     margin: 0 auto;
@@ -120,12 +101,12 @@ header {
     background-color: #0f2290;
     border: 3px solid #4f96d0;
     border-radius: 20px;
-    width: 280px; /* Standart genişlik */
+    width: 300px;
     overflow: hidden;
     box-shadow: 0 10px 25px rgba(0,0,0,0.6);
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, border-color 0.3s;
     position: relative;
 }
 
@@ -133,24 +114,23 @@ header {
         transform: translateY(-10px);
         border-color: #00ffff;
         box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
-        z-index: 10;
     }
 
 .resim-alani {
     width: 100%;
-    height: 220px; /* Resim yüksekliği */
+    height: 250px;
     background-color: #050a30;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px;
+    padding: 5px;
 }
 
     .resim-alani img {
         width: 100%;
         height: 100%;
-        object-fit: contain; /* Resmi kesmeden sığdır */
-        filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
+        object-fit: contain;
+        border-radius: 10px;
     }
 
 .bilgi-alani {
@@ -164,37 +144,31 @@ header {
 }
 
     .bilgi-alani h3 {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         margin-bottom: 10px;
         color: #fff;
         text-transform: uppercase;
-        font-weight: 700;
-        line-height: 1.3;
-        /* Uzun başlıkları sınırla */
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        min-height: 50px;
     }
 
 .fiyat-kutusu {
     background-color: rgba(0, 0, 0, 0.4);
-    padding: 8px;
+    padding: 10px;
     border-radius: 12px;
     margin-top: auto;
-    border: 1px solid rgba(79, 150, 208, 0.5);
+    border: 1px solid #4f96d0;
 }
 
 .eski-fiyat {
     text-decoration: line-through;
     color: #ff6b6b;
-    font-size: 0.9rem;
-    margin-right: 8px;
+    font-size: 1rem;
+    margin-right: 10px;
 }
 
 .yeni-fiyat {
     color: #00ffff;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: bold;
     text-shadow: 0 0 10px rgba(0,255,255,0.5);
 }
@@ -203,21 +177,18 @@ header {
     background-color: #25D366;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 12px;
     width: 100%;
     margin-top: 10px;
-    border-radius: 50px; /* Yuvarlak buton */
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     font-size: 1rem;
-    transition: all 0.3s;
-    box-shadow: 0 0 10px rgba(37, 211, 102, 0.3);
+    transition: background 0.3s;
 }
 
     .ekle-btn:hover {
         background-color: #1ebe57;
-        box-shadow: 0 0 20px rgba(37, 211, 102, 0.8);
-        transform: scale(1.05);
     }
 
 /* =========================================
@@ -229,24 +200,22 @@ header {
     color: #ffd700;
     font-size: 1.8rem;
     font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .kaydirmali-container {
     display: flex;
     overflow-x: auto;
     gap: 20px;
-    padding: 20px 10px;
+    padding: 20px;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     justify-content: flex-start;
 }
 
-    /* Slider Scrollbar */
+    /* Scrollbar Tasarımı */
     .kaydirmali-container::-webkit-scrollbar {
-        height: 8px;
+        height: 10px;
     }
 
     .kaydirmali-container::-webkit-scrollbar-track {
@@ -257,15 +226,16 @@ header {
     .kaydirmali-container::-webkit-scrollbar-thumb {
         background: #4f96d0;
         border-radius: 10px;
+        border: 2px solid #050a30;
     }
 
     .kaydirmali-container .urun-kart {
         flex: 0 0 auto;
-        width: 260px; /* Slider'daki kartlar biraz daha dar olabilir */
+        width: 280px;
     }
 
 /* =========================================
-   5. SEPET VE MODAL
+   5. SEPET VE MODAL (DEĞİŞİKLİK YOK)
    ========================================= */
 .sepet-buton {
     position: fixed;
@@ -279,14 +249,9 @@ header {
     font-size: 1.2rem;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(255, 94, 0, 0.6);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     z-index: 9999;
-    transition: transform 0.2s;
 }
-
-    .sepet-buton:active {
-        transform: scale(0.9);
-    }
 
 .sepet-modal {
     display: none;
@@ -297,38 +262,46 @@ header {
     width: 100%;
     height: 100%;
     background-color: rgba(0,0,0,0.8);
-    backdrop-filter: blur(5px);
 }
 
 .sepet-icerik {
-    background-color: #0f2290; /* Sepet içi de tema rengi */
-    border: 2px solid #00ffff;
-    color: white;
-    margin: 10% auto;
+    background-color: white;
+    margin: 15% auto;
     padding: 20px;
-    border-radius: 15px;
+    border-radius: 10px;
     width: 90%;
     max-width: 400px;
+    color: black;
+    position: relative;
     text-align: center;
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
 }
+/* ... Kalan Sepet Stilleri Aynı ... */
 
 /* =========================================
-   6. FOOTER
+   6. FOOTER (SADE VE NEON TASARIM)
    ========================================= */
 footer {
     width: 100%;
+    /* Düz renk yerine uzay temalı geçişli arka plan */
     background: linear-gradient(to bottom, #050a30, #000000);
     text-align: center;
-    padding: 40px 20px 100px 20px;
+    padding: 40px 20px 100px 20px; /* Mobilde sepet butonu altında kalmasın diye alt boşluk */
     margin-top: 60px;
+    /* Neon Mavi Üst Çizgi */
     border-top: 3px solid #00ffff;
-    box-shadow: 0 -10px 40px rgba(0, 255, 255, 0.2);
-    color: #e0e0e0;
+    /* Yukarı doğru yayılan Mavi Neon Işık (Glow Efekti) */
+    box-shadow: 0 -10px 40px rgba(0, 255, 255, 0.3);
+    color: #e0e0e0; /* Tam beyaz değil, göz yormayan gri-beyaz */
     font-size: 1rem;
-    letter-spacing: 1px;
+    letter-spacing: 1px; /* Harf aralarını biraz açarak şıklık katar */
+    /* Footer taşmasını engelle */
+    max-width: 100vw;
+    overflow-x: hidden;
+    position: relative;
+    z-index: 10;
 }
 
+    /* Eğer footer içinde link varsa (Örn: Gizlilik Politikası) onlar için hover efekti */
     footer a {
         color: #ffd700;
         text-decoration: none;
@@ -339,503 +312,629 @@ footer {
             color: #00ffff;
             text-shadow: 0 0 10px #00ffff;
         }
+/* ... Kalan Footer Stilleri Aynı ... */
 
 /* =========================================
-   8. ARAMA BAR STİLİ
+   7. HAKKIMIZDA SAYFASI (DEĞİŞİKLİK YOK)
+   ========================================= */
+/* ... Hakkımızda Stilleri Aynı ... */
+
+
+/* =========================================
+   8. ARAMA BAR STİLİ (MOBİL İÇİN DÜZELTİLDİ)
    ========================================= */
 .search-bar-container {
     max-width: 800px;
     margin: 0 auto;
     border-radius: 50px;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-    border: 1px solid rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
 }
 
 .search-input {
-    background-color: rgba(10, 22, 50, 0.8);
+    background-color: rgba(25, 40, 90, 0.8);
     color: #fff;
     border: none;
+    border-right: 1px solid #00ffff;
     padding: 20px 25px;
     font-size: 1.1rem;
+    transition: box-shadow 0.3s;
 }
 
-    .search-input::placeholder {
-        color: #aaa;
-    }
-
     .search-input:focus {
-        background-color: #050a30;
+        background-color: #1a2c73;
         color: white;
-        outline: none;
-        box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2);
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.8) !important;
+        border-color: #00ffff;
     }
 
 .search-btn {
     background-color: #00ffff;
-    color: #000;
+    color: #0a0a2a;
     font-weight: bold;
-    padding: 0 30px;
+    font-size: 1.1rem;
+    padding: 10px 30px;
     border: none;
-    cursor: pointer;
-    transition: 0.3s;
+    transition: background-color 0.3s;
 }
 
-    .search-btn:hover {
-        background-color: white;
-        box-shadow: 0 0 15px white;
-    }
 
 /* =========================================
-   9. FİLTRE MENÜSÜ
+   9. FİLTRE MENÜSÜ DİKEY STİLİ
    ========================================= */
-.filter-fixed-container {
-    position: fixed;
-    top: 120px;
-    left: 20px;
-    z-index: 800;
-}
 
-.filter-toggle-btn {
-    background-color: rgba(189, 0, 255, 0.2);
-    border: 2px solid #bd00ff;
-    color: #bd00ff;
-    border-radius: 50px;
-    padding: 10px 25px;
+/* Masaüstü Pozisyonlama */
+.filter-header-title {
     font-weight: bold;
-    cursor: pointer;
-    backdrop-filter: blur(5px);
-    transition: 0.3s;
+    padding: 5px 0;
+    border-bottom: 1px solid #4f96d0;
+    font-size: 1.1rem; /* Okunurluk için */
+    margin-bottom: 10px !important;
+}
+
+.filter-fixed-container {
+    border-radius: 30px;
+    position: fixed;
+    top: 100px;
+    left: 10px;
+    z-index: 1000;
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: row;
 }
 
-    .filter-toggle-btn:hover {
-        background-color: #bd00ff;
-        color: white;
-        box-shadow: 0 0 20px #bd00ff;
-    }
-
+/* Açılır Menü İçeriği (Görünür Kısım) */
 .filter-menu-content {
-    background-color: rgba(10, 22, 50, 0.95);
-    border: 1px solid #4f96d0;
-    backdrop-filter: blur(10px);
-    width: 260px;
-    margin-top: 10px;
+    background-color: rgba(10, 22, 50, 0.98);
+    backdrop-filter: blur(4px); /* Buzlu Cam Efekti */
+    -webkit-backdrop-filter: blur(4px);
+    width: 280px;
+    margin-left: 10px;
     padding: 15px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+    height: fit-content;
+    overflow-y: auto;
 }
 
+
+/* Filtre Öğelerinin Ortak Stilleri */
 .filter-item {
     display: block;
-    padding: 10px;
+    text-align: left;
+    padding: 10px 15px;
     margin: 5px 0;
-    color: #4f96d0;
+    color: #4f96d0; /* Metin rengi */
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 6px;
     font-weight: bold;
-    transition: 0.2s;
+    transition: all 0.2s;
 }
 
     .filter-item:hover {
-        background-color: rgba(0, 255, 255, 0.1);
+        background-color: #1a2c73;
         color: #00ffff;
     }
 
+/* Aktif Olan Filtre */
 .active-filter {
     background-color: #00ffff;
-    color: #000 !important;
-    box-shadow: 0 0 10px #00ffff;
+    color: #0a0a2a !important;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
 }
 
+/* İÇERİK KAYDIRMA SIFIRLAMA (Mobil Sorununu Gidermek için Gerekli) */
+@media (max-width: 600px) {
+    .filter-menu-content {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+
 /* =========================================
-   🔥 10. MOBİL UYUMLULUK (SÜPER OPTİMİZE EDİLDİ)
+   10. MOBİL UYUMLULUK (600px ve altı için kritik)
    ========================================= */
 @media (max-width: 600px) {
 
-    /* Admin Butonlarını Küçült ve Ortala */
+    /* 1. KAPSAMLI ARAMA ÇUBUĞU DÜZELTMESİ (Telefonda düzgün görünür) */
+    .search-bar-container {
+        max-width: 100%;
+        margin: 0 5px;
+        border-radius: 10px;
+        box-shadow: none;
+    }
+
+    .input-group-lg > .search-input {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .input-group-lg > .search-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+
+    /* 2. ADMİN BUTONLARI DÜZELTMESİ */
     .admin-btn-container {
-        position: static;
+        position: static; /* Header'daki absolute pozisyonu ezer */
         justify-content: center;
         margin: 10px 0;
-        width: 100%;
-        padding: 0 5px;
         flex-wrap: wrap;
+        width: 100%; /* Mobil görünümde yer kaplasın */
+        padding: 0 10px;
     }
 
-    .admin-link {
-        font-size: 12px;
-        padding: 6px 10px;
-    }
-
-    /* Arama Çubuğu */
-    .search-bar-container {
-        margin: 0 10px;
-        border-radius: 30px;
-    }
-
-    .search-input {
-        padding: 12px 15px;
-        font-size: 0.9rem;
-    }
-
-    .search-btn {
-        padding: 0 20px;
-        font-size: 0.9rem;
-    }
-
-    /* Filtre Menüsü: Mobilde sayfaya yayılmasın */
+    /* 3. FİLTRE MENÜSÜ DÜZELTMESİ */
     .filter-fixed-container {
-        position: relative; /* Sabitlikten çıkar */
-        top: 0;
-        left: 0;
-        margin: 15px auto;
-        width: 95%;
-        text-align: center;
+        position: static;
+        margin: 20px auto;
+        display: block;
+        width: 100%;
+        padding: 0 10px;
     }
 
     .filter-toggle-btn {
         width: 100%;
-        justify-content: center;
+        margin-bottom: 10px;
     }
 
     .filter-menu-content {
         width: 100%;
+        margin-left: 0;
     }
 
-    /* 🚀 ÜRÜN KARTLARI (2'Lİ SIRA SİSTEMİ) */
+    /* 4. İÇERİK KAYDIRMA SIFIRLAMA */
+    .main-content-offset {
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    /* 5. ÜRÜN KARTLARI DÜZELTMESİ */
     .urun-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px; /* Kartlar arası boşluk (Azaltıldı) */
+        gap: 10px;
         padding: 10px;
-        justify-content: space-between; /* Sağa sola yasla */
     }
 
     .urun-kart {
-        /* Mobilde yan yana 2 tane sığsın diye genişlik ayarı */
-        width: 48%; /* %48 veriyoruz ki arada %2 boşluk kalsın */
-        margin-bottom: 10px;
-        border-width: 2px; /* Kenarlık biraz incelsin */
+        width: calc(50% - 10px);
+        max-width: none;
     }
+}
 
-    .resim-alani {
-        height: 140px; /* Resim alanı küçüldü */
-        padding: 5px;
-    }
 
-    .bilgi-alani {
-        padding: 10px 8px; /* İç boşlukları daralt */
-    }
+/* =========================================
+   11. ADMIN PANELİ VE FORM STİLLERİ
+   ========================================= */
 
-        .bilgi-alani h3 {
-            font-size: 0.85rem; /* Ürün ismi ufaldi */
-            min-height: 35px; /* Yükseklik sabitleme */
-            margin-bottom: 5px;
-        }
+/* Form Elemanlarını Hizalama */
+.admin-card input[type="text"],
+.admin-card input[type="number"],
+.admin-card select,
+.admin-card textarea {
+    width: 100%;
+}
 
-    .fiyat-kutusu {
-        padding: 5px;
-        margin-top: 5px;
-    }
-
-    .eski-fiyat {
-        font-size: 0.75rem;
-        display: block; /* Alt alta gelsin */
-        margin-right: 0;
-    }
-
-    .yeni-fiyat {
-        font-size: 1.1rem; /* Fiyat biraz daha belirgin */
-    }
-
-    .ekle-btn {
-        font-size: 0.85rem;
-        padding: 8px;
-        margin-top: 8px;
-    }
-
-    /* Sepet butonu mobilde çok büyük olmasın */
-    .sepet-buton {
-        padding: 12px 18px;
-        font-size: 1rem;
-        bottom: 15px;
-        right: 15px;
-    }
+.text-center {
+    color: aliceblue;
 }
 
 /* =========================================
-   11 & 12. ADMIN PANELİ STILLERİ (Aynen Korundu)
+   ADMIN PANELİ NEON GLASS TASARIMI (GÜNCELLEMELER)
    ========================================= */
+
+/* Admin Kartları Temel Stilleri */
 .admin-card {
-    background: rgba(15, 34, 144, 0.4);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(79, 150, 208, 0.4);
+    background: rgba(15, 34, 144, 0.3); /* Yarı Saydam */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(79, 150, 208, 0.5);
     border-radius: 15px;
     padding: 30px;
     color: white;
-    transition: 0.3s;
+    transition: all 0.4s ease;
+    display: flex; /* İçeriği hizalamak için */
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none !important;
     height: 100%;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
     .admin-card:hover {
-        transform: translateY(-5px);
+        transform: translateY(-10px) scale(1.03);
     }
 
-    /* Renk Kartları */
-    .admin-card.card-yesil {
+.admin-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+/* 🚨 RENK SINIFLARI (İsimlerine Uygun Hale Getirildi) */
+
+/* 1. YEŞİL KART (Ürün Ekle) */
+.admin-card.card-yesil {
+    background: rgba(37, 211, 102, 0.15); /* Yeşil Transparan */
+    border-color: #25D366;
+    box-shadow: 0 0 15px rgba(37, 211, 102, 0.4);
+}
+
+    .admin-card.card-yesil:hover {
+        box-shadow: 0 0 30px rgba(37, 211, 102, 1);
         border-color: #25D366;
-        box-shadow: 0 0 15px rgba(37, 211, 102, 0.2);
     }
 
-        .admin-card.card-yesil:hover {
-            box-shadow: 0 0 25px #25D366;
-        }
+/* 2. MAVİ KART (Ürünleri Yönet) */
+.admin-card.card-mavi {
+    background: rgba(0, 255, 255, 0.15); /* Mavi/Turkuaz Transparan */
+    border-color: #00ffff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+}
 
-    .admin-card.card-mavi {
+    .admin-card.card-mavi:hover {
+        box-shadow: 0 0 30px rgba(0, 255, 255, 1);
         border-color: #00ffff;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
     }
 
-        .admin-card.card-mavi:hover {
-            box-shadow: 0 0 25px #00ffff;
-        }
+/* 3. SARI KART (Slider Ayarları) */
+.admin-card.card-sari {
+    background: rgba(255, 215, 0, 0.15); /* Sarı/Altın Transparan */
+    border-color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
 
-    .admin-card.card-sari {
+    .admin-card.card-sari:hover {
+        box-shadow: 0 0 30px rgba(255, 215, 0, 1);
         border-color: #ffd700;
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
     }
 
-        .admin-card.card-sari:hover {
-            box-shadow: 0 0 25px #ffd700;
-        }
-
+/* Aksiyon Butonu */
 .btn-admin-action {
-    background: rgba(255,255,255,0.1);
-    color: white;
-    border: 1px solid currentColor;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid #4f96d0;
     width: 100%;
-    padding: 10px;
-    border-radius: 30px;
-    margin-top: 20px;
+    padding: 12px;
+    border-radius: 50px;
+    font-weight: bold;
+    margin-top: auto !important;
     transition: 0.3s;
-    text-align: center;
-    display: block;
-    text-decoration: none;
 }
 
-    .btn-admin-action:hover {
-        background: white;
-        color: black;
-        box-shadow: 0 0 15px white;
-    }
+.admin-card:hover .btn-admin-action {
+    background-color: white;
+    color: #0a0a2a;
+    box-shadow: 0 0 15px white;
+}
+/* =========================================
+   12. ADMIN TABLO TASARIMI (NEON TABLE)
+   ========================================= */
 
-/* Admin Tablosu */
+/* Tabloyu Saran Cam Kutu */
 .admin-table-wrapper {
-    background: rgba(10, 22, 50, 0.8);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    padding: 20px;
-    overflow-x: auto;
+    background: rgba(15, 34, 144, 0.6); /* Yarı saydam lacivert */
+    backdrop-filter: blur(10px); /* Buzlu cam */
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(79, 150, 208, 0.3);
+    overflow-x: auto; /* Mobilde tablo taşarsa kaydırma çubuğu çıkar */
+    margin-top: 20px;
 }
 
+/* Tablonun Kendisi */
 .neon-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 10px;
+    border-collapse: separate; /* Satır aralarına boşluk koymak için */
+    border-spacing: 0 15px; /* Satırlar arası 15px boşluk */
     color: white;
 }
 
-    .neon-table th {
-        color: #ffd700;
-        padding: 15px;
-        text-align: left;
+    /* Tablo Başlıkları */
+    .neon-table thead th {
+        color: #ffd700; /* Altın Sarısı Başlıklar */
         text-transform: uppercase;
         font-size: 0.9rem;
+        letter-spacing: 1px;
+        padding: 15px;
+        border: none;
+        text-align: left;
     }
 
-    .neon-table tr {
-        background: rgba(5, 10, 48, 0.6);
-        transition: 0.3s;
+    /* Tablo Satırları */
+    .neon-table tbody tr {
+        background-color: rgba(5, 10, 48, 0.8); /* Koyu zemin */
+        transition: all 0.3s ease;
+        position: relative;
     }
 
-        .neon-table tr:hover {
-            background: rgba(0, 255, 255, 0.15);
-            transform: scale(1.01);
+        /* Satırların Üzerine Gelince (Hover) */
+        .neon-table tbody tr:hover {
+            transform: scale(1.01); /* Hafifçe büyür */
+            background-color: rgba(0, 255, 255, 0.1); /* Turkuaz parlama */
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            z-index: 10;
         }
 
-    .neon-table td {
+    /* Hücreler */
+    .neon-table tbody td {
         padding: 15px;
+        vertical-align: middle;
         border-top: 1px solid #4f96d0;
         border-bottom: 1px solid #4f96d0;
-        vertical-align: middle;
+        font-size: 1rem;
     }
 
-        .neon-table td:first-child {
+        /* Satırların Köşelerini Yuvarlatma */
+        .neon-table tbody td:first-child {
             border-left: 1px solid #4f96d0;
-            border-radius: 10px 0 0 10px;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
         }
 
-        .neon-table td:last-child {
+        .neon-table tbody td:last-child {
             border-right: 1px solid #4f96d0;
-            border-radius: 0 10px 10px 0;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
         }
 
+/* Tablo İçindeki Küçük Resimler */
 .table-img {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-    background: white;
-    border-radius: 5px;
+    width: 60px;
+    height: 60px;
+    object-fit: contain; /* Resmi kesmeden sığdır */
+    background-color: #fff;
+    border-radius: 8px;
     padding: 2px;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 
+/* İşlem Butonları (Düzenle, Sil vb.) */
 .action-btn {
-    padding: 5px 10px;
+    display: inline-block;
+    padding: 8px 15px;
     border-radius: 5px;
     text-decoration: none;
-    font-size: 0.8rem;
     font-weight: bold;
+    font-size: 0.85rem;
     margin-right: 5px;
-    border: 1px solid;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
 }
 
 .btn-neon-edit {
+    background-color: rgba(0, 255, 255, 0.2);
     color: #00ffff;
-    border-color: #00ffff;
-    background: rgba(0,255,255,0.1);
+    border: 1px solid #00ffff;
 }
 
     .btn-neon-edit:hover {
-        background: #00ffff;
-        color: black;
+        background-color: #00ffff;
+        color: #000;
+        box-shadow: 0 0 10px #00ffff;
     }
 
 .btn-neon-delete {
+    background-color: rgba(255, 77, 77, 0.2);
     color: #ff4d4d;
-    border-color: #ff4d4d;
-    background: rgba(255,77,77,0.1);
+    border: 1px solid #ff4d4d;
 }
 
     .btn-neon-delete:hover {
-        background: #ff4d4d;
-        color: white;
+        background-color: #ff4d4d;
+        color: #fff;
+        box-shadow: 0 0 10px #ff4d4d;
     }
 
 .btn-neon-detail {
+    background-color: rgba(255, 215, 0, 0.2);
     color: #ffd700;
-    border-color: #ffd700;
-    background: rgba(255,215,0,0.1);
+    border: 1px solid #ffd700;
 }
 
     .btn-neon-detail:hover {
-        background: #ffd700;
-        color: black;
+        background-color: #ffd700;
+        color: #000;
+        box-shadow: 0 0 10px #ffd700;
     }
+/* =========================================
+   7. HAKKIMIZDA SAYFASI TASARIMI
+   ========================================= */
 
-/* HAKKIMIZDA BÖLÜMÜ (Aynen Korundu) */
+/* Ana Kapsayıcı: İçeriği ortalar ve düzenli tutar */
 .hakkimizda-container {
     max-width: 1000px;
     margin: 40px auto;
     padding: 0 20px;
-    color: #ddd;
+    color: #e0e0e0; /* Okunabilir açık gri metin */
 }
 
+    /* Ana Başlık (BİZ KİMİZ?) */
     .hakkimizda-container h1 {
-        color: #00ffff;
         text-align: center;
+        color: #00ffff; /* Neon Mavi */
+        font-weight: 800;
+        margin-bottom: 20px;
         text-transform: uppercase;
-        text-shadow: 0 0 15px rgba(0,255,255,0.5);
+        letter-spacing: 2px;
+        text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
     }
 
+    /* Alt Başlıklar (NEDEN UYGUN, NASIL SİPARİŞ) */
     .hakkimizda-container h2 {
-        color: #ffd700;
-        border-left: 5px solid #ffd700;
+        color: #ffd700; /* Altın Sarısı */
+        margin-top: 50px;
+        margin-bottom: 20px;
+        border-left: 5px solid #ffd700; /* Solda şık bir çizgi */
         padding-left: 15px;
-        margin-top: 40px;
+        text-transform: uppercase;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+
+    /* Giriş Yazısı ve Paragraflar */
+    .intro-yazi, .hakkimizda-container p {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: #cfcfcf;
+        margin-bottom: 20px;
     }
 
 .intro-yazi {
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+}
+
+/* Özellikler Kutusu (Grid Yapısı) */
+.ozellikler-kutu {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap; /* Mobilde alt alta geçsin */
+    justify-content: center;
     margin-bottom: 40px;
 }
 
-.ozellikler-kutu {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-
+/* Tekil Özellik Kartı */
 .ozellik {
     flex: 1;
-    min-width: 250px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(0,255,255,0.3);
-    padding: 20px;
-    border-radius: 15px;
+    min-width: 280px; /* Çok küçülmesin */
+    background: rgba(255, 255, 255, 0.05); /* Yarı saydam arka plan */
+    border: 1px solid rgba(0, 255, 255, 0.2); /* İnce mavi çerçeve */
+    border-radius: 20px;
+    padding: 30px;
     text-align: center;
-    transition: 0.3s;
+    transition: all 0.3s ease; /* Yumuşak animasyon */
+    position: relative;
+    overflow: hidden;
 }
 
+    /* Kartın Üzerine Gelince (Hover) */
     .ozellik:hover {
-        transform: translateY(-10px);
+        transform: translateY(-10px); /* Yukarı kalkar */
+        background: rgba(255, 255, 255, 0.1);
         border-color: #00ffff;
-        box-shadow: 0 0 20px rgba(0,255,255,0.3);
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); /* Parlama ekle */
     }
 
-    .ozellik .emoji {
-        font-size: 3rem;
-        display: block;
+    .ozellik h3 {
+        color: #fff;
+        font-size: 1.4rem;
+        margin-top: 15px;
         margin-bottom: 10px;
     }
 
+    /* Emojiler */
+    .ozellik .emoji {
+        font-size: 3.5rem;
+        display: block;
+        margin-bottom: 10px;
+        filter: drop-shadow(0 0 10px rgba(255,255,255,0.4));
+    }
+
+/* Nasıl Sipariş Verilir Listesi */
 .nasil-calisir {
-    list-style: none;
-    padding: 0;
+    list-style: none; /* Noktaları kaldır */
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 215, 0, 0.3); /* Sarı çerçeve */
 }
 
     .nasil-calisir li {
-        padding: 10px;
-        border-left: 3px solid #00ffff;
-        margin-bottom: 10px;
-        background: rgba(0,0,0,0.3);
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+        padding-left: 10px;
+        border-left: 3px solid #00ffff; /* Maddelerin solunda mavi çizgi */
         transition: 0.3s;
     }
 
         .nasil-calisir li:hover {
-            padding-left: 20px;
-            background: rgba(0,255,255,0.1);
+            padding-left: 20px; /* Üzerine gelince sağa kayar */
+            color: #fff;
         }
 
+/* İletişim Alanı */
 .iletisim-alani {
-    background: rgba(37, 211, 102, 0.1);
-    border: 2px dashed #25D366;
-    padding: 30px;
-    text-align: center;
+    margin-top: 60px;
+    padding: 40px;
+    background: rgba(37, 211, 102, 0.08); /* Hafif yeşil arka plan */
     border-radius: 20px;
-    margin-top: 50px;
+    text-align: center;
+    border: 2px dashed #25D366; /* Kesik çizgili yeşil çerçeve */
 }
 
+    .iletisim-alani h3 {
+        color: #25D366;
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+
+/* WhatsApp Butonu */
 .whatsapp-btn {
-    background: #25D366;
-    color: white;
-    padding: 15px 30px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: bold;
     display: inline-block;
-    margin-top: 15px;
-    transition: 0.3s;
+    margin-top: 20px;
+    padding: 15px 40px;
+    background-color: #25D366;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 50px;
+    box-shadow: 0 0 15px rgba(37, 211, 102, 0.4);
+    transition: all 0.3s ease;
 }
 
     .whatsapp-btn:hover {
-        background: #128C7E;
-        transform: scale(1.05);
-        box-shadow: 0 0 20px #25D366;
+        background-color: #128C7E;
+        transform: scale(1.05); /* Büyüme efekti */
+        box-shadow: 0 0 25px rgba(37, 211, 102, 0.8); /* Daha güçlü parlama */
+        color: white;
+    }
+/* =========================================
+   FİLTRE AÇMA BUTONU (MOR NEON)
+   ========================================= */
+.filter-toggle-btn {
+    /* Hafif Mor Cam Arka Plan */
+    background-color: rgba(189, 0, 255, 0.15);
+    /* Neon Mor Çerçeve */
+    border: 2px solid #bd00ff;
+    /* Neon Mor Yazı */
+    color: #bd00ff;
+    /* Yuvarlatılmış Köşeler */
+    border-radius: 50px;
+    padding: 10px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    /* Hafif Parlama */
+    box-shadow: 0 0 10px rgba(189, 0, 255, 0.2);
+    /* İkon ve yazı hizalaması */
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+    /* Üzerine Gelince (Hover) */
+    .filter-toggle-btn:hover {
+        background-color: #bd00ff; /* İçi mor dolar */
+        color: #fff; /* Yazı beyaz olur */
+        /* Etrafa Güçlü Mor Işık Saç */
+        box-shadow: 0 0 20px rgba(189, 0, 255, 0.6), 0 0 40px rgba(189, 0, 255, 0.3);
+        transform: translateY(-2px); /* Hafifçe yukarı kalkar */
+    }
+
+    /* Tıklanınca (Active - Menü Açıkken) */
+    .filter-toggle-btn:active,
+    .filter-toggle-btn[aria-expanded="true"] {
+        background-color: #bd00ff;
+        color: white;
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.5); /* İç gölge */
     }
