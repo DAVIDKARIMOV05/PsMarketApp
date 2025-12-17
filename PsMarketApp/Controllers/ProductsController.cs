@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PsMarketApp.Data;
 using PsMarketApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using PsMarketApp.Helpers; // ImageUploader için gerekli
 
 namespace PsMarketApp.Controllers
 {
@@ -20,44 +21,51 @@ namespace PsMarketApp.Controllers
         // 1. LİSTELEME (INDEX)
         public async Task<IActionResult> Index()
         {
-            // Slider bilgisini de (Include) çekiyoruz ki listede adı görünsün
             var products = await _context.Products.Include(p => p.Slider).ToListAsync();
             return View(products);
         }
 
-        // ⭐️ 2. DETAY SAYFASI (EKSİK OLAN KISIM EKLENDİ)
+        // 2. DETAY SAYFASI
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var product = await _context.Products
-                .Include(p => p.Slider) // Slider başlığını detay sayfasında göstermek için şart
+                .Include(p => p.Slider)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (product == null)
-            {
-                return NotFound();
-            }
+            if (product == null) return NotFound();
 
             return View(product);
         }
 
-        // 3. EKLEME SAYFASINI AÇ (GET)
+        // 3. EKLEME SAYFASI (GET)
         public IActionResult Create()
         {
             ViewData["SliderId"] = new SelectList(_context.Sliders, "Id", "Baslik");
             return View();
         }
 
-        // 4. EKLEME İŞLEMİNİ YAP (POST)
+        // 4. EKLEME İŞLEMİ (POST) - GÜNCELLENDİ (Cloudinary)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Product product, string YeniSliderIsmi)
+        // "file" parametresi eklendi (HTML'den gelen resim)
+        public async Task<IActionResult> Create(Product product, string YeniSliderIsmi, IFormFile file)
         {
-            // A) Yeni Slider Oluşturma Mantığı
+            // --- RESİM YÜKLEME KISMI ---
+            if (file != null)
+            {
+                var uploader = new ImageUploader();
+                string resimLinki = uploader.UploadImage(file);
+
+                if (resimLinki != null)
+                {
+                    product.ImageUrl = resimLinki; // Cloudinary linkini kaydet
+                }
+            }
+            // ---------------------------
+
+            // A) Yeni Slider Mantığı
             if (!string.IsNullOrEmpty(YeniSliderIsmi))
             {
                 var yeniSlider = new Slider { Baslik = YeniSliderIsmi };
@@ -67,11 +75,10 @@ namespace PsMarketApp.Controllers
             }
             else if (product.SliderId == 0)
             {
-                // Kullanıcı listeden seçmediyse, SliderId null (Listesiz/Vitrin ürünü)
                 product.SliderId = null;
             }
 
-            // Hata kontrollerini temizle (Slider nesnesi ve yeni isim alanı zorunlu değil)
+            // Hata kontrollerini temizle
             ModelState.Remove("Slider");
             ModelState.Remove("YeniSliderIsmi");
 
@@ -90,7 +97,6 @@ namespace PsMarketApp.Controllers
                 }
             }
 
-            // Hata varsa sayfayı tekrar yükle
             ViewData["SliderId"] = new SelectList(_context.Sliders, "Id", "Baslik", product.SliderId);
             return View(product);
         }
@@ -107,14 +113,37 @@ namespace PsMarketApp.Controllers
             return View(product);
         }
 
-        // 6. DÜZENLEME İŞLEMİ (EDIT POST)
+        // 6. DÜZENLEME İŞLEMİ (EDIT POST) - GÜNCELLENDİ (Cloudinary)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Product product, string YeniSliderIsmi)
+        public async Task<IActionResult> Edit(int id, Product product, string YeniSliderIsmi, IFormFile file)
         {
             if (id != product.Id) return NotFound();
 
-            // Yeni Slider Ekleme Mantığı (Edit içinde de geçerli)
+            // --- RESİM GÜNCELLEME KISMI ---
+            if (file != null)
+            {
+                // Yeni resim seçildiyse yükle ve linki değiştir
+                var uploader = new ImageUploader();
+                string yeniLink = uploader.UploadImage(file);
+                if (yeniLink != null)
+                {
+                    product.ImageUrl = yeniLink;
+                }
+            }
+            else
+            {
+                // Yeni resim SEÇİLMEDİYSE, eski resim linkini korumamız lazım.
+                // Veritabanından eski kaydı "Takip Etmeden" (AsNoTracking) çekiyoruz ki çakışma olmasın.
+                var eskiUrun = await _context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+                if (eskiUrun != null)
+                {
+                    product.ImageUrl = eskiUrun.ImageUrl;
+                }
+            }
+            // ------------------------------
+
+            // Slider Mantığı
             if (!string.IsNullOrEmpty(YeniSliderIsmi))
             {
                 var yeniSlider = new Slider { Baslik = YeniSliderIsmi };

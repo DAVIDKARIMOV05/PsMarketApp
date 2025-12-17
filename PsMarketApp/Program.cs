@@ -20,49 +20,61 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnCh
 builder.Configuration.AddEnvironmentVariables();
 
 // ============================================================
-// 🛠️ BAĞLANTIYI OLUŞTURMA (RENDER URL DÜZELTİCİ - FİNAL)
+// 🛠️ BAĞLANTIYI OLUŞTURMA (HEM LOCAL HEM RENDER UYUMLU)
 // ============================================================
 string connectionString = "";
 
 try
 {
-    var renderUrl = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+    // Adım 1: Önce Render Environment'a bak
+    var rawConnectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
 
-    if (string.IsNullOrEmpty(renderUrl))
+    // Adım 2: Render boşsa, appsettings.json'a bak (Local)
+    if (string.IsNullOrEmpty(rawConnectionString))
     {
-        renderUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+        rawConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     }
 
-    // DÜZELTME: Hem "postgres://" hem de "postgresql://" kabul ediliyor
-    if (!string.IsNullOrEmpty(renderUrl) && (renderUrl.StartsWith("postgres://") || renderUrl.StartsWith("postgresql://")))
+    // Adım 3: Adresi bulduk mu? Dönüştürme işlemi yapalım.
+    if (!string.IsNullOrEmpty(rawConnectionString))
     {
-        Console.WriteLine("--> Render URL'i algılandı, dönüştürülüyor...");
-
-        var databaseUri = new Uri(renderUrl);
-        var userInfo = databaseUri.UserInfo.Split(new[] { ':' }, 2);
-
-        var builderDb = new NpgsqlConnectionStringBuilder
+        // Eğer adres "postgres://" veya "postgresql://" ile başlıyorsa parçala ve düzelt
+        if (rawConnectionString.StartsWith("postgres://") || rawConnectionString.StartsWith("postgresql://"))
         {
-            Host = databaseUri.Host,
-            Port = databaseUri.Port > 0 ? databaseUri.Port : 5432,
-            Username = userInfo[0],
-            Password = userInfo[1],
-            Database = databaseUri.LocalPath.TrimStart('/'),
-            SslMode = SslMode.Prefer,
-            TrustServerCertificate = true
-        };
+            Console.WriteLine("--> Veritabanı URL formatı algılandı, dönüştürülüyor...");
 
-        connectionString = builderDb.ToString();
+            var databaseUri = new Uri(rawConnectionString);
+            var userInfo = databaseUri.UserInfo.Split(new[] { ':' }, 2);
+
+            var builderDb = new NpgsqlConnectionStringBuilder
+            {
+                Host = databaseUri.Host,
+                Port = databaseUri.Port > 0 ? databaseUri.Port : 5432,
+                Username = userInfo[0],
+                Password = userInfo[1],
+                Database = databaseUri.LocalPath.TrimStart('/'),
+                SslMode = SslMode.Prefer,
+                TrustServerCertificate = true // Localde SSL hatası almamak için önemli
+            };
+            connectionString = builderDb.ToString();
+            Console.WriteLine("--> Bağlantı başarıyla dönüştürüldü.");
+        }
+        else
+        {
+            // Eğer zaten düzgün formatta geldiyse (Host=... gibi) olduğu gibi kullan
+            connectionString = rawConnectionString;
+        }
     }
     else
     {
-        // Render URL'i yoksa, yerel ayarlar
-        connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        throw new Exception("Bağlantı adresi (Connection String) ne Render'da ne de appsettings.json'da bulunamadı!");
     }
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"KRİTİK HATA: URL Çevrilemedi! Hata: {ex.Message}");
+    Console.WriteLine($"KRİTİK HATA: Bağlantı adresi işlenemedi! Hata: {ex.Message}");
+    // Hatanın devam etmesine izin veriyoruz ki uygulama dursun ve logu görelim
+    throw;
 }
 
 // 3. Veritabanı Servisini Ekle
@@ -96,6 +108,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// Hata Sayfası Ayarları
 app.UseDeveloperExceptionPage();
 
 var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();

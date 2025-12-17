@@ -25,10 +25,10 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label asp-for="ImageUrl" class="control-label" style="color: #00ffff; font-weight: bold;">🖼️ Resim Linki</label>
-                        <input asp-for="ImageUrl" class="form-control" placeholder="https://..."
+                        <label class="control-label" style="color: #00ffff; font-weight: bold;">🖼️ Ürün Resmi Seç</label>
+                        <input type="file" name="file" class="form-control" accept="image/*"
                                style="background: rgba(0,0,0,0.5); border: 1px solid #00ffff; color: white;" />
-                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        <small style="color: #ccc;">Sadece .jpg, .png veya .avif yükleyiniz.</small>
                     </div>
 
                     <div class="row">
