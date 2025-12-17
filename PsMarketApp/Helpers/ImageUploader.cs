@@ -14,7 +14,7 @@ namespace PsMarketApp.Helpers
         {
             // BURAYI KENDİ BİLGİLERİNLE DOLDUR
             _account = new Account(
-                "Root",
+                "dwipokmrn",
                 "297892197845526",
                 "R-aTZvqOavUBAjF6HfX49QXPP7M"
             );
