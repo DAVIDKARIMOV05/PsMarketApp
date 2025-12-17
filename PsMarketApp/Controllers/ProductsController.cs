@@ -46,10 +46,9 @@ namespace PsMarketApp.Controllers
             return View();
         }
 
-        // 4. EKLEME İŞLEMİ (POST) - GÜNCELLENDİ (Cloudinary)
+        // 4. EKLEME İŞLEMİ (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // "file" parametresi eklendi (HTML'den gelen resim)
         public async Task<IActionResult> Create(Product product, string YeniSliderIsmi, IFormFile file)
         {
             // --- RESİM YÜKLEME KISMI ---
@@ -78,7 +77,6 @@ namespace PsMarketApp.Controllers
                 product.SliderId = null;
             }
 
-            // Hata kontrollerini temizle
             ModelState.Remove("Slider");
             ModelState.Remove("YeniSliderIsmi");
 
@@ -93,7 +91,13 @@ namespace PsMarketApp.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "Kayıt hatası: " + ex.Message);
+                    // HATAYI DETAYLI GÖSTERME KISMI (Burayı Güçlendirdik)
+                    string mesaj = "Kayıt Başarısız: " + ex.Message;
+                    if (ex.InnerException != null)
+                    {
+                        mesaj += " | DETAY: " + ex.InnerException.Message;
+                    }
+                    ModelState.AddModelError("", mesaj);
                 }
             }
 
@@ -113,7 +117,7 @@ namespace PsMarketApp.Controllers
             return View(product);
         }
 
-        // 6. DÜZENLEME İŞLEMİ (EDIT POST) - GÜNCELLENDİ (Cloudinary)
+        // 6. DÜZENLEME İŞLEMİ (EDIT POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Product product, string YeniSliderIsmi, IFormFile file)
@@ -133,8 +137,7 @@ namespace PsMarketApp.Controllers
             }
             else
             {
-                // Yeni resim SEÇİLMEDİYSE, eski resim linkini korumamız lazım.
-                // Veritabanından eski kaydı "Takip Etmeden" (AsNoTracking) çekiyoruz ki çakışma olmasın.
+                // Yeni resim SEÇİLMEDİYSE, eski resim linkini veritabanından bulup koru
                 var eskiUrun = await _context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
                 if (eskiUrun != null)
                 {
@@ -165,13 +168,22 @@ namespace PsMarketApp.Controllers
                 {
                     _context.Update(product);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex) // Burayı da güçlendirdik
                 {
-                    if (!_context.Products.Any(e => e.Id == product.Id)) return NotFound();
-                    else throw;
+                    if (ex is DbUpdateConcurrencyException && !_context.Products.Any(e => e.Id == product.Id))
+                    {
+                        return NotFound();
+                    }
+
+                    string mesaj = "Güncelleme Başarısız: " + ex.Message;
+                    if (ex.InnerException != null)
+                    {
+                        mesaj += " | DETAY: " + ex.InnerException.Message;
+                    }
+                    ModelState.AddModelError("", mesaj);
                 }
-                return RedirectToAction(nameof(Index));
             }
             ViewData["SliderId"] = new SelectList(_context.Sliders, "Id", "Baslik", product.SliderId);
             return View(product);
