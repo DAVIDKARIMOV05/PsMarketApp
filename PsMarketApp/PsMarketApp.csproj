@@ -19,7 +19,6 @@
     <Content Remove="wwwroot\images\extra12ay.avif" />
     <Content Remove="wwwroot\images\extra1ay.jpeg" />
     <Content Remove="wwwroot\images\extra3ay.avif" />
-    <Content Remove="wwwroot\images\f8ea4onjck211.png" />
     <Content Remove="wwwroot\images\Forza Horizon 5 Standard Edition.jpg" />
     <Content Remove="wwwroot\images\Gemini_Generated_Image_1yq97w1yq97w1yq9.png" />
     <Content Remove="wwwroot\images\Gemini_Generated_Image_lgndp1lgndp1lgnd.png" />

@@ -16,10 +16,12 @@
                     ✏️ Ürünü Düzenle
                 </h2>
 
-                <form asp-action="Edit">
+                <form asp-action="Edit" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <input type="hidden" asp-for="Id" />
+
+                    <input type="hidden" asp-for="ImageUrl" />
 
                     <div class="form-group mb-4">
                         <label asp-for="Name" class="control-label" style="color: #ffd700; font-weight: bold; font-size: 1.1rem;">📦 Ürün Adı</label>
@@ -29,7 +31,7 @@
                     </div>
 
                     <div class="form-group mb-4 p-3 rounded" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(0, 255, 255, 0.3);">
-                        <label asp-for="ImageUrl" class="control-label" style="color: #00ffff; font-weight: bold;">🖼️ Resim Linki</label>
+                        <label class="control-label" style="color: #00ffff; font-weight: bold;">🖼️ Ürün Resmi</label>
 
                         <div class="d-flex align-items-center gap-3 mt-2">
                             @if (!string.IsNullOrEmpty(Model.ImageUrl))
@@ -39,9 +41,10 @@
                                 </div>
                             }
 
-                            <input asp-for="ImageUrl" class="form-control" placeholder="https://..."
+                            <input type="file" name="file" class="form-control" accept="image/*"
                                    style="background: rgba(0,0,0,0.5); border: 1px solid #00ffff; color: white;" />
                         </div>
+                        <small style="color: #ccc; margin-top: 5px; display:block;">⚠️ Resmi değiştirmek istemiyorsan boş bırak.</small>
                         <span asp-validation-for="ImageUrl" class="text-danger"></span>
                     </div>
 
@@ -77,8 +80,6 @@
                         <input name="YeniSliderIsmi" id="YeniSliderIsmi" class="form-control" placeholder="➕ Yeni Slider İsmi Yaz..."
                                style="background: rgba(0,0,0,0.6); border: 1px solid #ff9f43; color: white;" />
                     </div>
-
-                    
 
                     <div class="d-grid gap-3">
                         <button type="submit" class="btn btn-lg"
