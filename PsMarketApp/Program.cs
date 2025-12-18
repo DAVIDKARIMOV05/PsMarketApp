@@ -8,7 +8,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System;
-
+//bu site RENDER DA YAYINLANDI
+//SİTE FOTOĞRAFLARI CLOUDİNARY BULUTA KAYDEDİLİYOR
+//BU SİTE UPTİMEROBOT TARAFINDAN 5 DAKİKADA BİR DÜRTÜLÜYOR
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     Args = args
