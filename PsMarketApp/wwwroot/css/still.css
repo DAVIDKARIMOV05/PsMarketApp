@@ -10,7 +10,7 @@
 
 html, body {
     width: 100%;
-    /* 🚨 SAĞA KAYMA/BOŞLUK SORUNU İÇİN KESİN ÇÖZÜM */
+   
     overflow-x: hidden;
     margin: 0;
     padding: 0;
@@ -235,7 +235,7 @@ header {
     }
 
 /* =========================================
-   5. SEPET VE MODAL (DEĞİŞİKLİK YOK)
+   5. SEPET VE MODAL 
    ========================================= */
 .sepet-buton {
     position: fixed;
@@ -275,10 +275,10 @@ header {
     position: relative;
     text-align: center;
 }
-/* ... Kalan Sepet Stilleri Aynı ... */
+
 
 /* =========================================
-   6. FOOTER (SADE VE NEON TASARIM)
+   6. FOOTER 
    ========================================= */
 footer {
     width: 100%;
@@ -315,13 +315,13 @@ footer {
 /* ... Kalan Footer Stilleri Aynı ... */
 
 /* =========================================
-   7. HAKKIMIZDA SAYFASI (DEĞİŞİKLİK YOK)
+   7. HAKKIMIZDA SAYFASI 
    ========================================= */
 /* ... Hakkımızda Stilleri Aynı ... */
 
 
 /* =========================================
-   8. ARAMA BAR STİLİ (MOBİL İÇİN DÜZELTİLDİ)
+   8. ARAMA BAR STİLİ 
    ========================================= */
 .search-bar-container {
     max-width: 800px;
@@ -422,7 +422,7 @@ footer {
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
 }
 
-/* İÇERİK KAYDIRMA SIFIRLAMA (Mobil Sorununu Gidermek için Gerekli) */
+/* İÇERİK KAYDIRMA SIFIRLAMA  */
 @media (max-width: 600px) {
     .filter-menu-content {
         width: 100%;
@@ -432,11 +432,11 @@ footer {
 
 
 /* =========================================
-   10. MOBİL UYUMLULUK (600px ve altı için kritik)
+   10. MOBİL UYUMLULUK 
    ========================================= */
 @media (max-width: 600px) {
 
-    /* 1. KAPSAMLI ARAMA ÇUBUĞU DÜZELTMESİ (Telefonda düzgün görünür) */
+    /* 1. KAPSAMLI ARAMA ÇUBUĞU DÜZELTMESİ */
     .search-bar-container {
         max-width: 100%;
         margin: 0 5px;
@@ -519,7 +519,7 @@ footer {
 }
 
 /* =========================================
-   ADMIN PANELİ NEON GLASS TASARIMI (GÜNCELLEMELER)
+   ADMIN PANELİ NEON GLASS TASARIMI 
    ========================================= */
 
 /* Admin Kartları Temel Stilleri */
@@ -550,7 +550,7 @@ footer {
     display: inline-block;
 }
 
-/* 🚨 RENK SINIFLARI (İsimlerine Uygun Hale Getirildi) */
+/* 🚨 RENK SINIFLARI  */
 
 /* 1. YEŞİL KART (Ürün Ekle) */
 .admin-card.card-yesil {

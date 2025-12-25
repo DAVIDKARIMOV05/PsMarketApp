@@ -91,7 +91,7 @@ namespace PsMarketApp.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // HATAYI DETAYLI GÖSTERME KISMI (Burayı Güçlendirdik)
+                    // HATAYI DETAYLI GÖSTERME KISMI
                     string mesaj = "Kayıt Başarısız: " + ex.Message;
                     if (ex.InnerException != null)
                     {

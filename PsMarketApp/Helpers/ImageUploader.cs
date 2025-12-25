@@ -12,7 +12,7 @@ namespace PsMarketApp.Helpers
 
         public ImageUploader()
         {
-            // BURAYI KENDİ BİLGİLERİNLE DOLDUR
+            // CLOUDİNARY BAĞLANTSI
             _account = new Account(
                 "dwipokmrn",
                 "297892197845526",
@@ -33,8 +33,8 @@ namespace PsMarketApp.Helpers
                     var uploadParams = new ImageUploadParams()
                     {
                         File = new FileDescription(file.FileName, stream),
-                        // İstersen resmi kare kırpabilirsin (Opsiyonel, şimdilik kapalı kalsın)
-                        // Transformation = new Transformation().Width(500).Height(500).Crop("fill") 
+                        
+                       
                     };
 
                     var uploadResult = _cloudinary.Upload(uploadParams);

@@ -13,7 +13,7 @@ namespace PsMarketApp.Controllers
             // Eğer zaten giriş yapılmışsa, direkt Admin Paneline gönder
             if (User.Identity.IsAuthenticated)
             {
-                // DÜZELTME 1: Yönlendirme Products/Create yerine Admin/Index oldu
+                //   Admin/Index
                 return RedirectToAction("Index", "Admin");
             }
             return View();

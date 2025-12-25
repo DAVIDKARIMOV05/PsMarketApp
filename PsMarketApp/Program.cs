@@ -37,7 +37,7 @@ try
         rawConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     }
 
-    // Adım 3: Adresi bulduk mu? Dönüştürme işlemi yapalım.
+    //  Dönüştürme işlemi 
     if (!string.IsNullOrEmpty(rawConnectionString))
     {
         // Eğer adres "postgres://" veya "postgresql://" ile başlıyorsa parçala ve düzelt
@@ -56,7 +56,7 @@ try
                 Password = userInfo[1],
                 Database = databaseUri.LocalPath.TrimStart('/'),
                 SslMode = SslMode.Prefer,
-                TrustServerCertificate = true // Localde SSL hatası almamak için önemli
+                TrustServerCertificate = true // Localde SSL hatası almamak için 
             };
             connectionString = builderDb.ToString();
             Console.WriteLine("--> Bağlantı başarıyla dönüştürüldü.");
