@@ -152,5 +152,77 @@
             </div>
         }
     </div>
+    @if (ViewBag.TotalPages > 1)
+    {
+        <div class="d-flex justify-content-center mt-5 mb-5">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+
+                    @if (ViewBag.CurrentPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="Home"
+                               asp-action="Index"
+                               asp-route-page="@(ViewBag.CurrentPage - 1)"
+                               asp-route-SearchTerm="@ViewData["SearchTerm"]"
+                               asp-route-Filter="@ViewData["Filter"]">
+                                &laquo; Önceki
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo; Önceki</span>
+                        </li>
+                    }
+
+                    <li class="page-item active">
+                        <span class="page-link" style="background-color: #4f96d0; border-color: #4f96d0;">
+                            Sayfa @ViewBag.CurrentPage / @ViewBag.TotalPages
+                        </span>
+                    </li>
+
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="Home"
+                               asp-action="Index"
+                               asp-route-page="@(ViewBag.CurrentPage + 1)"
+                               asp-route-SearchTerm="@ViewData["SearchTerm"]"
+                               asp-route-Filter="@ViewData["Filter"]">
+                                Sonraki &raquo;
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">Sonraki &raquo;</span>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+
+</div> ```
+
+### 📍 Tam Olarak Nereye Koyacaksın?
+Kodunun en sonuna bak. Şöyle bitiyor:
+
+```html
+        }
+    </div> </div> ```
+
+Bunu ekledikten sonra projeyi çalıştır.
+1.  Siteye gir.
+2.  İlk 12 ürünü göreceksin.
+3.  En alta inince **"Sonraki"** butonunu göreceksin.
+4.  Basınca diğer oyunlar gelecek.
+
+Artık 10.000 oyunu yüklemeye tam anlamıyla hazırsın! Veritabanı kodunu (`oyunlar_final_insert.sql`) çalıştırabilirsin. 🚀
 
 </div>
