@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 // ============================================================
-// 1. VERİTABANI BAĞLANTISI (SADECE LOCAL SQL SERVER)
+// 1. VERİTABANI BAĞLANTISI (LINUX VE RENDER UYUMLU)
 // ============================================================
-// Render ayarlarını sildik. Sadece appsettings.json'a bakar.
+var dbPath = Path.Combine(AppContext.BaseDirectory, "Market.db");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+    options.UseSqlite($"Data Source={dbPath}"));
+// ============================================================
 // ============================================================
 
 builder.Services.AddControllersWithViews();
@@ -51,7 +51,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection(); // Güvenli bağlantı
+//app.UseHttpsRedirection(); // Güvenli bağlantı
 app.UseStaticFiles();      // wwwroot klasörünü aç
 
 app.UseRouting();
