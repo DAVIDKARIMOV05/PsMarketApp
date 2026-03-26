@@ -64,4 +64,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // Render port ayarını sildik, Visual Studio kendi ayarlarını kullanacak.
+Console.WriteLine("DEBUG - Sitenin okuduğu klasör: " + AppContext.BaseDirectory);
 app.Run();
